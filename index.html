@@ -1,0 +1,1139 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VOID GFX — گالری طراحی</title>
+
+<link href="https://fonts.cdnfonts.com/css/minecraft-4" rel="stylesheet">
+
+<style>
+  /* ====== فونت میخک از jsDelivr ====== */
+  /* فقط USERNAME و REPO-NAME رو عوض کن */
+  @font-face {
+    font-family: 'Mikhak';
+    src: url('https://cdn.jsdelivr.net/gh/USERNAME/REPO-NAME@main/fonts/Mikhak-Medium.ttf') format('truetype');
+    font-display: swap;
+  }
+
+  :root {
+    --void: #7c5cff;
+    --void-dark: #5a3fd6;
+    --gold: #d4af37;
+    --bg: #0a0a12;
+    --surface: #12121c;
+    --surface-2: #1a1a28;
+    --border: #2a2a3c;
+    --text: #e8e8f0;
+    --muted: #8888a0;
+    --green: #4ade80;
+    --red: #ff6b6b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Mikhak', Tahoma, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.7;
+  }
+
+  /* ===== پس‌زمینه نرم ===== */
+  .bg-glow {
+    position: fixed;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(124,92,255,0.12), transparent 70%);
+    pointer-events: none; z-index: 0;
+    animation: glowMove 18s ease-in-out infinite alternate;
+  }
+  .bg-glow-2 {
+    position: fixed;
+    bottom: -200px; left: -200px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(212,175,55,0.08), transparent 70%);
+    pointer-events: none; z-index: 0;
+    animation: glowMove 22s ease-in-out infinite alternate-reverse;
+  }
+  @keyframes glowMove {
+    0% { transform: translate(0,0) scale(1); }
+    100% { transform: translate(60px,40px) scale(1.15); }
+  }
+
+  /* ===== هدر ===== */
+  header {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(10,10,18,0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    animation: slideDown 0.6s ease;
+  }
+  @keyframes slideDown {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+  }
+
+  .nav {
+    max-width: 1280px; margin: 0 auto;
+    padding: 16px 24px;
+    display: flex; justify-content: space-between;
+    align-items: center; gap: 20px;
+  }
+
+  .brand {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Minecraft', 'Mikhak', sans-serif;
+    font-size: 1.5rem; letter-spacing: 1px;
+    user-select: none;
+  }
+  .brand .void { color: var(--void); }
+  .brand .gfx { color: var(--gold); text-shadow: 0 0 20px rgba(212,175,55,0.5); }
+
+  .brand-logo {
+    width: 38px; height: 38px; border-radius: 10px;
+    background: linear-gradient(135deg, var(--void), var(--void-dark));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    box-shadow: 0 0 24px rgba(124,92,255,0.4);
+    animation: logoPulse 3s ease-in-out infinite;
+  }
+  @keyframes logoPulse {
+    0%, 100% { box-shadow: 0 0 24px rgba(124,92,255,0.4); }
+    50% { box-shadow: 0 0 36px rgba(212,175,55,0.5); }
+  }
+
+  .nav-links { display: flex; gap: 28px; align-items: center; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none;
+    font-size: 0.95rem; transition: color 0.25s;
+    position: relative;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-links a::after {
+    content: '';
+    position: absolute; bottom: -4px; right: 0;
+    width: 0; height: 2px;
+    background: linear-gradient(90deg, var(--void), var(--gold));
+    transition: width 0.3s;
+  }
+  .nav-links a:hover::after { width: 100%; }
+
+  .nav-actions { display: flex; gap: 10px; align-items: center; }
+
+  .btn {
+    padding: 9px 20px; border-radius: 10px; border: none;
+    font-family: inherit; font-size: 0.9rem;
+    cursor: pointer; transition: all 0.25s;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 6px;
+    white-space: nowrap;
+  }
+
+  .btn-ghost {
+    background: transparent; color: var(--text);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover {
+    border-color: var(--void); color: var(--void);
+    transform: translateY(-2px);
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--void), var(--void-dark));
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(124,92,255,0.3);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(124,92,255,0.5);
+  }
+
+  .btn-gold {
+    background: linear-gradient(135deg, var(--gold), #b8942e);
+    color: #1a1a12; font-weight: 600;
+  }
+  .btn-gold:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(212,175,55,0.4);
+  }
+
+  .btn-danger {
+    background: rgba(255,80,80,0.15); color: var(--red);
+    border: 1px solid rgba(255,80,80,0.3);
+  }
+  .btn-danger:hover { background: rgba(255,80,80,0.25); }
+
+  .btn-sm { padding: 6px 14px; font-size: 0.85rem; }
+  .btn-full { width: 100%; justify-content: center; }
+
+  /* ===== هیرو ===== */
+  .hero {
+    max-width: 1280px; margin: 0 auto;
+    padding: 90px 24px 50px; text-align: center;
+    position: relative; z-index: 1;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 700; margin-bottom: 14px;
+    line-height: 1.3;
+    animation: fadeUp 0.8s ease 0.1s backwards;
+  }
+  .hero h1 .accent {
+    background: linear-gradient(90deg, var(--void), var(--gold));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero p {
+    color: var(--muted); font-size: 1.05rem;
+    max-width: 550px; margin: 0 auto;
+    animation: fadeUp 0.8s ease 0.25s backwards;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== گالری ===== */
+  .gallery-section {
+    max-width: 1280px; margin: 0 auto;
+    padding: 30px 24px 80px;
+    position: relative; z-index: 1;
+  }
+
+  .section-head {
+    display: flex; justify-content: space-between;
+    align-items: center; margin-bottom: 28px;
+    flex-wrap: wrap; gap: 12px;
+  }
+
+  .section-title {
+    font-size: 1.6rem;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-title::before {
+    content: '';
+    width: 5px; height: 26px;
+    background: linear-gradient(180deg, var(--void), var(--gold));
+    border-radius: 3px;
+  }
+
+  .filter-chips {
+    display: flex; gap: 8px; flex-wrap: wrap;
+  }
+  .chip {
+    padding: 7px 16px; border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent; color: var(--muted);
+    font-family: inherit; font-size: 0.85rem;
+    cursor: pointer; transition: all 0.25s;
+  }
+  .chip:hover { border-color: var(--void); color: var(--text); }
+  .chip.active {
+    background: linear-gradient(135deg, var(--void), var(--void-dark));
+    border-color: transparent; color: #fff;
+  }
+
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+
+  .art-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px; overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1),
+                border-color 0.3s, box-shadow 0.4s;
+    position: relative;
+    animation: cardIn 0.6s ease backwards;
+  }
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(30px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .art-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--void);
+    box-shadow: 0 20px 40px rgba(124,92,255,0.25);
+  }
+
+  .art-thumb {
+    height: 200px;
+    background: linear-gradient(135deg, var(--surface-2), var(--surface));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 4rem; position: relative;
+    overflow: hidden;
+    transition: transform 0.5s cubic-bezier(0.22,1,0.36,1);
+  }
+  .art-thumb::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 100%, rgba(124,92,255,0.2), transparent 70%);
+    opacity: 0; transition: opacity 0.4s;
+  }
+  .art-card:hover .art-thumb { transform: scale(1.06); }
+  .art-card:hover .art-thumb::after { opacity: 1; }
+
+  .art-body { padding: 16px 18px 18px; }
+  .art-title {
+    font-size: 1.05rem; margin-bottom: 6px;
+    transition: color 0.3s;
+  }
+  .art-card:hover .art-title { color: var(--void); }
+
+  .art-tag {
+    display: inline-block; padding: 3px 10px;
+    border-radius: 20px;
+    background: rgba(212,175,55,0.1);
+    color: var(--gold); font-size: 0.75rem;
+    border: 1px solid rgba(212,175,55,0.2);
+  }
+
+  /* ===== لایت‌باکس ===== */
+  .lightbox {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 1000; display: none;
+    align-items: center; justify-content: center;
+    padding: 24px; opacity: 0;
+    transition: opacity 0.35s;
+  }
+  .lightbox.active { display: flex; opacity: 1; }
+
+  .lightbox-inner {
+    max-width: 800px; width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 24px; overflow: hidden;
+    transform: scale(0.9);
+    transition: transform 0.4s cubic-bezier(0.22,1,0.36,1);
+    max-height: 90vh; overflow-y: auto;
+    position: relative;
+  }
+  .lightbox.active .lightbox-inner { transform: scale(1); }
+
+  .lightbox-preview {
+    height: 320px;
+    background: linear-gradient(135deg, var(--surface-2), var(--surface));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 7rem; position: relative;
+  }
+  .lightbox-preview::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 50% 100%, rgba(124,92,255,0.2), transparent 70%);
+  }
+  .lightbox-info { padding: 26px 28px 30px; }
+  .lightbox-title { font-size: 1.5rem; margin-bottom: 10px; }
+  .lightbox-desc { color: var(--muted); margin-bottom: 18px; line-height: 1.9; }
+  .lightbox-tags { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .lightbox-close {
+    position: absolute; top: 20px; left: 20px;
+    width: 44px; height: 44px; border-radius: 12px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--border);
+    color: var(--text); font-size: 1.3rem;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.25s; z-index: 10;
+  }
+  .lightbox-close:hover {
+    background: var(--void); transform: rotate(90deg);
+  }
+
+  /* ===== فوتر ===== */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 36px 24px;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.88rem;
+    position: relative; z-index: 1;
+  }
+  footer .brand-mini {
+    font-family: 'Minecraft', 'Mikhak', sans-serif;
+    font-size: 1.1rem; margin-bottom: 10px;
+  }
+  footer .socials {
+    display: flex; justify-content: center;
+    gap: 14px; margin-top: 14px;
+  }
+  footer .socials a {
+    color: var(--muted); text-decoration: none;
+    font-size: 0.85rem; padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    transition: all 0.25s;
+  }
+  footer .socials a:hover {
+    color: var(--void); border-color: var(--void);
+    transform: translateY(-2px);
+  }
+
+  /* ===== مودال ===== */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    z-index: 1500; display: none;
+    align-items: center; justify-content: center;
+    padding: 20px; opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .modal-overlay.active { display: flex; opacity: 1; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    width: 100%; max-width: 440px;
+    max-height: 90vh; overflow-y: auto;
+    animation: modalIn 0.35s cubic-bezier(0.34,1.56,0.64,1);
+    position: relative;
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .modal-header {
+    padding: 22px 24px 0;
+    display: flex; justify-content: space-between;
+    align-items: center;
+  }
+  .modal-title { font-size: 1.3rem; }
+  .modal-close {
+    background: none; border: none;
+    color: var(--muted); font-size: 1.5rem;
+    cursor: pointer;
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .modal-close:hover { background: var(--surface-2); color: var(--text); }
+  .modal-body { padding: 20px 24px 24px; }
+
+  /* ===== فرم ===== */
+  .form-group { margin-bottom: 16px; }
+  .form-label {
+    display: block; font-size: 0.88rem;
+    color: var(--muted); margin-bottom: 6px;
+  }
+  .form-input, .form-textarea {
+    width: 100%; padding: 11px 14px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text);
+    font-family: inherit; font-size: 0.95rem;
+    outline: none; transition: all 0.25s;
+  }
+  .form-input:focus, .form-textarea:focus {
+    border-color: var(--void);
+    box-shadow: 0 0 0 3px rgba(124,92,255,0.15);
+  }
+  .form-textarea { resize: vertical; min-height: 90px; }
+
+  .form-error {
+    color: var(--red); font-size: 0.82rem;
+    margin-top: 6px; display: none;
+  }
+  .form-error.show { display: block; }
+
+  .form-row {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  /* ===== تب‌ها ===== */
+  .tabs {
+    display: flex; gap: 6px;
+    background: var(--surface-2);
+    padding: 5px; border-radius: 12px;
+    margin-bottom: 20px;
+  }
+  .tab {
+    flex: 1; padding: 10px; border: none;
+    background: transparent; color: var(--muted);
+    font-family: inherit; font-size: 0.9rem;
+    border-radius: 8px; cursor: pointer;
+    transition: all 0.25s;
+  }
+  .tab.active { background: var(--void); color: #fff; }
+
+  /* ===== پنل مدیریت ===== */
+  .admin-panel {
+    position: fixed; inset: 0;
+    background: var(--bg); z-index: 2000;
+    display: none; flex-direction: column;
+    overflow: hidden;
+  }
+  .admin-panel.active { display: flex; }
+
+  .admin-header {
+    padding: 16px 24px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between;
+    align-items: center; flex-wrap: wrap; gap: 12px;
+  }
+  .admin-header h2 {
+    font-size: 1.2rem;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .admin-badge {
+    background: linear-gradient(135deg, var(--void), var(--gold));
+    color: #fff; font-size: 0.7rem;
+    padding: 3px 10px; border-radius: 20px;
+    font-weight: 600;
+  }
+
+  .admin-body {
+    flex: 1; overflow-y: auto;
+    padding: 24px; max-width: 1280px;
+    margin: 0 auto; width: 100%;
+  }
+
+  .admin-section-title {
+    font-size: 1.15rem; margin: 24px 0 8px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .admin-section-title::before {
+    content: '';
+    width: 4px; height: 20px;
+    background: linear-gradient(180deg, var(--void), var(--gold));
+    border-radius: 2px;
+  }
+
+  .admin-table {
+    width: 100%; background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px; overflow: hidden;
+    border-collapse: collapse; margin-top: 16px;
+  }
+  .admin-table th {
+    background: var(--surface-2);
+    padding: 14px 16px; text-align: right;
+    font-size: 0.85rem; color: var(--muted);
+    font-weight: 500;
+  }
+  .admin-table td {
+    padding: 14px 16px;
+    border-top: 1px solid var(--border);
+    font-size: 0.92rem;
+  }
+  .admin-table tr:hover td { background: var(--surface-2); }
+
+  /* ===== توست ===== */
+  .toast-container {
+    position: fixed; bottom: 24px; left: 24px;
+    z-index: 3000;
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .toast {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-right: 3px solid var(--void);
+    padding: 14px 20px; border-radius: 12px;
+    min-width: 260px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    animation: toastIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    font-size: 0.9rem;
+  }
+  .toast.success { border-right-color: var(--green); }
+  .toast.error { border-right-color: var(--red); }
+  .toast.gold { border-right-color: var(--gold); }
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  /* ===== ریسپانسیو ===== */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .nav { padding: 14px 16px; }
+    .brand { font-size: 1.2rem; }
+    .brand-logo { width: 32px; height: 32px; }
+    .hero { padding: 60px 16px 40px; }
+    .gallery-section { padding: 20px 16px 60px; }
+    .gallery { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; }
+    .art-thumb { height: 160px; font-size: 3rem; }
+    .lightbox-preview { height: 240px; font-size: 5rem; }
+    .lightbox-info { padding: 20px; }
+    .form-row { grid-template-columns: 1fr; }
+    .admin-body { padding: 16px; }
+    .toast-container { left: 16px; right: 16px; }
+    .toast { min-width: auto; }
+    .admin-table { font-size: 0.85rem; }
+    .admin-table th, .admin-table td { padding: 10px 8px; }
+  }
+
+  @media (max-width: 480px) {
+    .gallery { grid-template-columns: 1fr 1fr; gap: 10px; }
+    .art-body { padding: 12px; }
+    .art-title { font-size: 0.9rem; }
+    .art-thumb { height: 130px; font-size: 2.5rem; }
+    .btn { padding: 8px 14px; font-size: 0.85rem; }
+  }
+
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb {
+    background: var(--border); border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover { background: var(--void); }
+
+  ::selection { background: var(--void); color: #fff; }
+</style>
+</head>
+<body>
+
+<div class="bg-glow"></div>
+<div class="bg-glow-2"></div>
+
+<!-- ===== هدر ===== -->
+<header>
+  <nav class="nav">
+    <div class="brand">
+      <div class="brand-logo">◆</div>
+      <span><span class="void">VOID</span> <span class="gfx">GFX</span></span>
+    </div>
+    <div class="nav-links">
+      <a href="#gallery">گالری</a>
+      <a href="#about">درباره</a>
+      <a href="#contact">تماس</a>
+    </div>
+    <div class="nav-actions">
+      <button class="btn btn-ghost" id="authBtn" onclick="openAuth()">ورود</button>
+      <button class="btn btn-primary" id="adminBtn" onclick="openAdmin()" style="display:none">⚙ پنل</button>
+    </div>
+  </nav>
+</header>
+
+<!-- ===== هیرو ===== -->
+<section class="hero">
+  <h1>طراحی‌های <span class="accent">من</span></h1>
+  <p>اینجا جاییه که کارهای گرافیکیم رو به اشتراک می‌ذارم</p>
+</section>
+
+<!-- ===== گالری ===== -->
+<section class="gallery-section" id="gallery">
+  <div class="section-head">
+    <h2 class="section-title">گالری کارها</h2>
+    <div class="filter-chips" id="filterChips"></div>
+  </div>
+  <div class="gallery" id="galleryGrid"></div>
+</section>
+
+<!-- ===== فوتر ===== -->
+<footer id="contact">
+  <div class="brand-mini">
+    <span style="color:var(--void)">VOID</span>
+    <span style="color:var(--gold)">GFX</span>
+  </div>
+  <p>© ۱۴۰۵ — تمامی حقوق محفوظ است</p>
+  <div class="socials">
+    <a href="#" onclick="return false">اینستاگرام</a>
+    <a href="#" onclick="return false">تلگرام</a>
+    <a href="#" onclick="return false">دیسکورد</a>
+  </div>
+</footer>
+
+<!-- ===== لایت‌باکس ===== -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <div class="lightbox-inner">
+    <div class="lightbox-preview" id="lightboxPreview"></div>
+    <div class="lightbox-info">
+      <h3 class="lightbox-title" id="lightboxTitle"></h3>
+      <p class="lightbox-desc" id="lightboxDesc"></p>
+      <div class="lightbox-tags" id="lightboxTags"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== مودال احراز هویت ===== -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3 class="modal-title">حساب کاربری</h3>
+      <button class="modal-close" onclick="closeModal('authModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="tabs">
+        <button class="tab active" id="tabLogin" onclick="switchAuthTab('login')">ورود</button>
+        <button class="tab" id="tabSignup" onclick="switchAuthTab('signup')">ثبت‌نام</button>
+      </div>
+
+      <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label class="form-label">ایمیل</label>
+          <input type="email" class="form-input" id="loginEmail" required placeholder="example@mail.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">رمز عبور</label>
+          <input type="password" class="form-input" id="loginPassword" required placeholder="••••••••">
+        </div>
+        <div class="form-error" id="loginError"></div>
+        <button type="submit" class="btn btn-primary btn-full" style="margin-top:8px">ورود</button>
+      </form>
+
+      <form id="signupForm" style="display:none" onsubmit="handleSignup(event)">
+        <div class="form-group">
+          <label class="form-label">نام کاربری</label>
+          <input type="text" class="form-input" id="signupName" required placeholder="نام شما">
+        </div>
+        <div class="form-group">
+          <label class="form-label">ایمیل</label>
+          <input type="email" class="form-input" id="signupEmail" required placeholder="example@mail.com">
+        </div>
+        <div class="form-group">
+          <label class="form-label">رمز عبور</label>
+          <input type="password" class="form-input" id="signupPassword" required minlength="6" placeholder="حداقل ۶ کاراکتر">
+        </div>
+        <div class="form-error" id="signupError"></div>
+        <button type="submit" class="btn btn-primary btn-full" style="margin-top:8px">ساخت حساب</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ===== پنل مدیریت ===== -->
+<div class="admin-panel" id="adminPanel">
+  <div class="admin-header">
+    <h2>
+      ⚙ پنل مدیریت
+      <span class="admin-badge">ADMIN</span>
+    </h2>
+    <button class="btn btn-danger btn-sm" onclick="closeAdmin()">✕ خروج</button>
+  </div>
+  <div class="admin-body">
+
+    <h3 class="admin-section-title">افزودن کار جدید</h3>
+    <form onsubmit="addArtwork(event)" style="max-width:600px">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">عنوان کار</label>
+          <input type="text" class="form-input" id="artTitle" required placeholder="مثلاً لوگوی PvP">
+        </div>
+        <div class="form-group">
+          <label class="form-label">دسته‌بندی</label>
+          <input type="text" class="form-input" id="artCategory" required placeholder="لوگو / بنر / تامبنیل">
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">توضیحات</label>
+        <textarea class="form-textarea" id="artDesc" placeholder="توضیح کوتاه درباره کار..."></textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">آیکون (ایموجی)</label>
+          <input type="text" class="form-input" id="artIcon" placeholder="🎨" value="🎨">
+        </div>
+        <div class="form-group">
+          <label class="form-label">برچسب‌ها (با کاما جدا کن)</label>
+          <input type="text" class="form-input" id="artTags" placeholder="ماینکرفت, لوگو">
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary">➕ افزودن کار</button>
+    </form>
+
+    <h3 class="admin-section-title">لیست کارها</h3>
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>آیکون</th>
+          <th>عنوان</th>
+          <th>دسته</th>
+          <th>عملیات</th>
+        </tr>
+      </thead>
+      <tbody id="adminArtworksTable"></tbody>
+    </table>
+
+    <h3 class="admin-section-title">کاربران</h3>
+    <table class="admin-table">
+      <thead>
+        <tr>
+          <th>نام</th>
+          <th>ایمیل</th>
+          <th>تاریخ ثبت‌نام</th>
+        </tr>
+      </thead>
+      <tbody id="adminUsersTable"></tbody>
+    </table>
+
+  </div>
+</div>
+
+<!-- ===== توست ===== -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script>
+/* ============================================================
+   ذخیره‌سازی محلی
+   ============================================================ */
+const DB = {
+  get(key, def = []) {
+    try { return JSON.parse(localStorage.getItem('void_' + key)) ?? def; }
+    catch { return def; }
+  },
+  set(key, val) { localStorage.setItem('void_' + key, JSON.stringify(val)); }
+};
+
+const ADMIN_EMAIL = 'tahadaneshbayan2@gmail.com';
+
+let state = {
+  artworks: DB.get('artworks', []),
+  users: DB.get('users', []),
+  currentUser: DB.get('currentUser', null)
+};
+
+if (state.artworks.length === 0) {
+  state.artworks = [
+    { id: 1, title: 'لوگوی PvP', desc: 'طراحی اختصاصی برای سرورهای PvP با سبک ماینکرفتی و رنگ‌بندی گرم', icon: '⚔️', category: 'لوگو', tags: ['PvP', 'ماینکرفت'] },
+    { id: 2, title: 'لوگوی SkyBlock', desc: 'طرح مینیمال و مدرن برای حالت SkyBlock با جزئیات ابر و آسمان', icon: '☁️', category: 'لوگو', tags: ['SkyBlock', 'مینیمال'] },
+    { id: 3, title: 'لوگوی Survival', desc: 'طراحی حرفه‌ای برای سرور Survival با المان‌های طبیعت و بقا', icon: '🌲', category: 'لوگو', tags: ['Survival', 'طبیعت'] },
+    { id: 4, title: 'لوگوی BedWars', desc: 'طرح شاد و رنگی برای BedWars با پالت رنگی زنده', icon: '🛏️', category: 'لوگو', tags: ['BedWars', 'رنگی'] },
+    { id: 5, title: 'بنر یوتیوب', desc: 'بنر اختصاصی برای کانال یوتیوب گیمینگ با افکت نئون', icon: '🎬', category: 'بنر', tags: ['یوتیوب', 'نئون'] },
+    { id: 6, title: 'تامبنیل استریم', desc: 'تامبنیل برای استریم Twitch با طراحی جذاب و خوانا', icon: '📺', category: 'تامبنیل', tags: ['Twitch', 'استریم'] },
+    { id: 7, title: 'آیکون سرور', desc: 'آیکون مربعی برای سرور ماینکرفت با سبک پیکسلی', icon: '🎮', category: 'آیکون', tags: ['پیکسل', 'سرور'] },
+    { id: 8, title: 'لوگوی کانال', desc: 'لوگوی شخصی برای کانال گیمینگ با حرف اختصاصی', icon: '🎯', category: 'لوگو', tags: ['شخصی', 'گیمینگ'] }
+  ];
+  DB.set('artworks', state.artworks);
+}
+
+/* ============================================================
+   کمکی
+   ============================================================ */
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+function esc(str) {
+  const d = document.createElement('div');
+  d.textContent = String(str ?? '');
+  return d.innerHTML;
+}
+
+function toast(msg, type = '') {
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = 'toast ' + type;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(() => {
+    t.style.transition = 'all 0.3s';
+    t.style.opacity = '0';
+    t.style.transform = 'translateX(-20px)';
+    setTimeout(() => t.remove(), 300);
+  }, 2800);
+}
+
+function openModal(id) { document.getElementById(id).classList.add('active'); }
+function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => {
+    if (e.target === m) m.classList.remove('active');
+  });
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.active').forEach(m => m.classList.remove('active'));
+    closeLightbox();
+  }
+});
+
+/* ============================================================
+   گالری
+   ============================================================ */
+let activeCategory = 'همه';
+
+function renderChips() {
+  const container = document.getElementById('filterChips');
+  const categories = ['همه', ...new Set(state.artworks.map(a => a.category))];
+  container.innerHTML = categories.map(cat => `
+    <button class="chip ${cat === activeCategory ? 'active' : ''}" data-cat="${esc(cat)}">
+      ${esc(cat)}
+    </button>
+  `).join('');
+
+  container.querySelectorAll('.chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      activeCategory = chip.dataset.cat;
+      renderChips();
+      renderGallery();
+    });
+  });
+}
+
+function renderGallery() {
+  const grid = document.getElementById('galleryGrid');
+  const filtered = activeCategory === 'همه'
+    ? state.artworks
+    : state.artworks.filter(a => a.category === activeCategory);
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '<p style="color:var(--muted);grid-column:1/-1;text-align:center;padding:40px">کاری در این دسته وجود ندارد</p>';
+    return;
+  }
+
+  grid.innerHTML = filtered.map((art, i) => `
+    <div class="art-card" style="animation-delay:${i * 0.06}s" onclick="openLightbox('${art.id}')">
+      <div class="art-thumb">${esc(art.icon)}</div>
+      <div class="art-body">
+        <h3 class="art-title">${esc(art.title)}</h3>
+        <span class="art-tag">${esc(art.category)}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function openLightbox(id) {
+  const art = state.artworks.find(a => a.id == id);
+  if (!art) return;
+
+  document.getElementById('lightboxPreview').textContent = art.icon;
+  document.getElementById('lightboxTitle').textContent = art.title;
+  document.getElementById('lightboxDesc').textContent = art.desc || '';
+  document.getElementById('lightboxTags').innerHTML = (art.tags || [])
+    .map(t => `<span class="art-tag">${esc(t)}</span>`)
+    .join('');
+
+  document.getElementById('lightbox').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('lightbox').addEventListener('click', e => {
+  if (e.target.id === 'lightbox') closeLightbox();
+});
+
+/* ============================================================
+   احراز هویت
+   ============================================================ */
+function openAuth() {
+  if (state.currentUser) {
+    if (confirm(`شما به عنوان ${state.currentUser.name} وارد شده‌اید.\n\nخروج از حساب؟`)) {
+      logout();
+    }
+    return;
+  }
+  openModal('authModal');
+}
+
+function switchAuthTab(tab) {
+  const isLogin = tab === 'login';
+  document.getElementById('tabLogin').classList.toggle('active', isLogin);
+  document.getElementById('tabSignup').classList.toggle('active', !isLogin);
+  document.getElementById('loginForm').style.display = isLogin ? 'block' : 'none';
+  document.getElementById('signupForm').style.display = isLogin ? 'none' : 'block';
+}
+
+function showError(elId, msg) {
+  const el = document.getElementById(elId);
+  el.textContent = msg;
+  el.classList.add('show');
+}
+
+function handleSignup(e) {
+  e.preventDefault();
+  const name = document.getElementById('signupName').value.trim();
+  const email = document.getElementById('signupEmail').value.trim().toLowerCase();
+  const password = document.getElementById('signupPassword').value;
+
+  document.getElementById('signupError').classList.remove('show');
+
+  if (name.length < 2) return showError('signupError', 'نام باید حداقل ۲ کاراکتر باشد');
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError('signupError', 'ایمیل معتبر نیست');
+  if (password.length < 6) return showError('signupError', 'رمز عبور باید حداقل ۶ کاراکتر باشد');
+
+  if (state.users.some(u => u.email === email)) {
+    return showError('signupError', 'این ایمیل قبلاً ثبت شده است');
+  }
+
+  const passwordHash = btoa(unescape(encodeURIComponent(password + '::void_salt')));
+
+  const user = {
+    id: uid(),
+    name,
+    email,
+    passwordHash,
+    createdAt: new Date().toISOString()
+  };
+
+  state.users.push(user);
+  DB.set('users', state.users);
+
+  state.currentUser = { id: user.id, name: user.name, email: user.email };
+  DB.set('currentUser', state.currentUser);
+
+  updateAuthUI();
+  closeModal('authModal');
+  e.target.reset();
+  toast(`خوش آمدی ${name}! 🎉`, 'success');
+
+  if (email === ADMIN_EMAIL) {
+    toast('شما دسترسی مدیر دارید ⚙', 'gold');
+  }
+}
+
+function handleLogin(e) {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+  const password = document.getElementById('loginPassword').value;
+
+  document.getElementById('loginError').classList.remove('show');
+
+  const user = state.users.find(u => u.email === email);
+  if (!user) return showError('loginError', 'کاربری با این ایمیل یافت نشد');
+
+  const hash = btoa(unescape(encodeURIComponent(password + '::void_salt')));
+  if (hash !== user.passwordHash) return showError('loginError', 'رمز عبور اشتباه است');
+
+  state.currentUser = { id: user.id, name: user.name, email: user.email };
+  DB.set('currentUser', state.currentUser);
+
+  updateAuthUI();
+  closeModal('authModal');
+  e.target.reset();
+  toast(`خوش برگشتی ${user.name}! 👋`, 'success');
+}
+
+function logout() {
+  state.currentUser = null;
+  DB.set('currentUser', null);
+  updateAuthUI();
+  closeAdmin();
+  toast('از حساب خارج شدید', '');
+}
+
+function updateAuthUI() {
+  const authBtn = document.getElementById('authBtn');
+  const adminBtn = document.getElementById('adminBtn');
+
+  if (state.currentUser) {
+    authBtn.textContent = '👤 ' + state.currentUser.name;
+    if (state.currentUser.email === ADMIN_EMAIL) {
+      adminBtn.style.display = 'inline-flex';
+    } else {
+      adminBtn.style.display = 'none';
+    }
+  } else {
+    authBtn.textContent = 'ورود';
+    adminBtn.style.display = 'none';
+  }
+}
+
+/* ============================================================
+   پنل مدیریت
+   ============================================================ */
+function openAdmin() {
+  if (!state.currentUser || state.currentUser.email !== ADMIN_EMAIL) {
+    toast('شما دسترسی مدیریت ندارید', 'error');
+    return;
+  }
+  renderAdmin();
+  document.getElementById('adminPanel').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeAdmin() {
+  document.getElementById('adminPanel').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+function renderAdmin() {
+  const tbody = document.getElementById('adminArtworksTable');
+  if (state.artworks.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--muted)">کاری وجود ندارد</td></tr>';
+  } else {
+    tbody.innerHTML = state.artworks.map(a => `
+      <tr>
+        <td style="font-size:1.4rem">${esc(a.icon)}</td>
+        <td>${esc(a.title)}</td>
+        <td>${esc(a.category)}</td>
+        <td><button class="btn btn-danger btn-sm" onclick="deleteArtwork('${a.id}')">حذف</button></td>
+      </tr>
+    `).join('');
+  }
+
+  const userTbody = document.getElementById('adminUsersTable');
+  if (state.users.length === 0) {
+    userTbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:var(--muted)">کاربری وجود ندارد</td></tr>';
+  } else {
+    userTbody.innerHTML = state.users.map(u => `
+      <tr>
+        <td>${esc(u.name)} ${u.email === ADMIN_EMAIL ? '<span class="admin-badge">ADMIN</span>' : ''}</td>
+        <td>${esc(u.email)}</td>
+        <td>${new Date(u.createdAt).toLocaleDateString('fa-IR')}</td>
+      </tr>
+    `).join('');
+  }
+}
+
+function addArtwork(e) {
+  e.preventDefault();
+  const title = document.getElementById('artTitle').value.trim();
+  const category = document.getElementById('artCategory').value.trim();
+  const desc = document.getElementById('artDesc').value.trim();
+  const icon = document.getElementById('artIcon').value.trim() || '🎨';
+  const tagsRaw = document.getElementById('artTags').value.trim();
+  const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(Boolean) : [];
+
+  if (!title) return toast('عنوان کار الزامی است', 'error');
+  if (!category) return toast('دسته‌بندی الزامی است', 'error');
+
+  state.artworks.unshift({
+    id: uid(),
+    title,
+    category,
+    desc,
+    icon,
+    tags
+  });
+  DB.set('artworks', state.artworks);
+  renderGallery();
+  renderChips();
+  renderAdmin();
+  e.target.reset();
+  document.getElementById('artIcon').value = '🎨';
+  toast('کار جدید اضافه شد ✅', 'success');
+}
+
+function deleteArtwork(id) {
+  if (!confirm('مطمئنی می‌خوای این کار رو حذف کنی؟')) return;
+  state.artworks = state.artworks.filter(a => a.id != id);
+  DB.set('artworks', state.artworks);
+  renderGallery();
+  renderChips();
+  renderAdmin();
+  toast('کار حذف شد', '');
+}
+
+/* ============================================================
+   مقداردهی اولیه
+   ============================================================ */
+renderChips();
+renderGallery();
+updateAuthUI();
+</script>
+</body>
+</html>
