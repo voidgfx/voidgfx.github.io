@@ -3,16 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VOID GFX— وید جی اف ایکس </title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>VOID GFX — گالری طراحی</title>
 <link href="https://fonts.cdnfonts.com/css/minecraft-4" rel="stylesheet">
 
 <style>
   @font-face {
     font-family: 'Mikhak';
-    src: url('Mikhak-Medium.ttf') format('truetype');
-    font-weight: normal;
+    src: url('Mikhak-Medium.ttf?v=1') format('truetype');
     font-display: swap;
   }
+
   :root {
     --void: #8b5cf6;
     --void-light: #a78bfa;
@@ -81,15 +84,8 @@
     user-select: none;
   }
 
-  .brand .void {
-    color: var(--void-light);
-    text-shadow: 0 0 20px rgba(139,92,246,0.6);
-  }
-
-  .brand .gfx {
-    color: var(--gold);
-    text-shadow: 0 0 20px rgba(251,191,36,0.6);
-  }
+  .brand .void { color: var(--void-light); text-shadow: 0 0 20px rgba(139,92,246,0.6); }
+  .brand .gfx { color: var(--gold); text-shadow: 0 0 20px rgba(251,191,36,0.6); }
 
   .brand-logo {
     width: 42px;
@@ -104,18 +100,9 @@
     flex-shrink: 0;
   }
 
-  .brand-logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
+  .brand-logo img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
-  .nav-links {
-    display: flex;
-    gap: 32px;
-    align-items: center;
-  }
+  .nav-links { display: flex; gap: 32px; align-items: center; }
 
   .nav-links a {
     color: var(--muted);
@@ -240,18 +227,9 @@
     min-height: 1.3em;
   }
 
-  /* ===== انیمیشن تایپ با RGB متحرک ===== */
   .typewriter {
     display: inline-block;
-    background: linear-gradient(
-      90deg,
-      #a78bfa,
-      #ec4899,
-      #60a5fa,
-      #4ade80,
-      #fbbf24,
-      #a78bfa
-    );
+    background: linear-gradient(90deg, #a78bfa, #ec4899, #60a5fa, #4ade80, #fbbf24, #a78bfa);
     background-size: 300% 100%;
     -webkit-background-clip: text;
     background-clip: text;
@@ -268,15 +246,7 @@
     display: inline-block;
     width: 3px;
     height: 0.9em;
-    background: linear-gradient(
-      180deg,
-      #a78bfa,
-      #ec4899,
-      #60a5fa,
-      #4ade80,
-      #fbbf24,
-      #a78bfa
-    );
+    background: linear-gradient(180deg, #a78bfa, #ec4899, #60a5fa, #4ade80, #fbbf24, #a78bfa);
     background-size: 100% 300%;
     margin-right: 6px;
     vertical-align: middle;
@@ -323,12 +293,7 @@
     font-family: 'Minecraft', 'Mikhak', sans-serif;
   }
 
-  .stat-label {
-    color: var(--muted);
-    font-size: 0.82rem;
-    margin-top: 2px;
-  }
-
+  .stat-label { color: var(--muted); font-size: 0.82rem; margin-top: 2px; }
   .stat-divider { width: 1px; background: var(--border); }
 
   @keyframes fadeUp {
@@ -545,11 +510,8 @@
   }
 
   .lightbox-info { padding: 30px 32px 34px; position: relative; }
-
   .lightbox-title { font-size: 1.6rem; margin-bottom: 12px; font-weight: 700; }
-
   .lightbox-desc { color: var(--muted); margin-bottom: 20px; line-height: 1.95; }
-
   .lightbox-tags { display: flex; gap: 8px; flex-wrap: wrap; }
 
   .lightbox-close {
@@ -571,10 +533,7 @@
     z-index: 10;
   }
 
-  .lightbox-close:hover {
-    background: var(--void);
-    transform: rotate(90deg);
-  }
+  .lightbox-close:hover { background: var(--void); transform: rotate(90deg); }
 
   footer {
     border-top: 1px solid var(--border);
@@ -681,7 +640,6 @@
   }
 
   .modal-body { padding: 22px 26px 26px; }
-
   .form-group { margin-bottom: 18px; }
 
   .form-label {
@@ -721,12 +679,7 @@
   }
 
   .form-error.show { display: block; }
-
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-  }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
   .tabs {
     display: flex;
@@ -781,10 +734,7 @@
     border-color: var(--void);
   }
 
-  .upload-placeholder {
-    color: var(--muted);
-    font-size: 0.9rem;
-  }
+  .upload-placeholder { color: var(--muted); font-size: 0.9rem; }
 
   .upload-placeholder .icon {
     font-size: 2.5rem;
@@ -843,11 +793,7 @@
   .upload-info .size-info { color: var(--green); }
   .upload-info .dim-info { color: var(--void-light); }
 
-  .upload-btn-group {
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
-  }
+  .upload-btn-group { display: flex; gap: 8px; margin-top: 10px; }
 
   .upload-btn-group .btn {
     flex: 1;
@@ -948,9 +894,7 @@
     font-size: 0.92rem;
   }
 
-  .admin-table tr:hover td {
-    background: rgba(139,92,246,0.04);
-  }
+  .admin-table tr:hover td { background: rgba(139,92,246,0.04); }
 
   .toast-container {
     position: fixed;
@@ -983,6 +927,36 @@
     to { opacity: 1; transform: translate3d(0, 0, 0); }
   }
 
+  .loading-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(8,8,15,0.9);
+    z-index: 5000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  .loading-overlay.active { opacity: 1; pointer-events: all; }
+
+  .loader {
+    width: 48px;
+    height: 48px;
+    border: 3px solid var(--border);
+    border-top-color: var(--void);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-text { color: var(--muted); font-size: 0.9rem; }
+
   @media (max-width: 768px) {
     .nav-links { display: none; }
     .nav { padding: 14px 16px; }
@@ -1003,11 +977,7 @@
     .toast { min-width: auto; }
     .admin-table { font-size: 0.85rem; }
     .admin-table th, .admin-table td { padding: 11px 10px; }
-
-    .typewriter-cursor {
-      animation: blink 0.9s step-end infinite;
-    }
-
+    .typewriter-cursor { animation: blink 0.9s step-end infinite; }
     .art-card:hover .art-thumb img { transform: none; }
     .art-arrow { display: none; }
   }
@@ -1046,6 +1016,11 @@
 <body>
 
 <div class="bg-layer"></div>
+
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loader"></div>
+  <div class="loading-text" id="loadingText">در حال بارگذاری...</div>
+</div>
 
 <header>
   <nav class="nav">
@@ -1264,6 +1239,16 @@
 <div class="toast-container" id="toastContainer"></div>
 
 <script>
+/* ============================================================
+   تنظیمات Worker — اینجا آدرس Worker خودت رو بذار
+   ============================================================ */
+const WORKER_URL = 'https://voidgfx.tahadaneshbayan2.workers.dev';
+const AUTH_KEY = 'voidgfx_secret_2025'; // همون AUTH_KEY که توی Cloudflare گذاشتی
+const ADMIN_EMAIL = 'tahadaneshbayan2@gmail.com';
+
+/* ============================================================
+   ذخیره‌سازی محلی (فقط برای کش لیست کاربران و لاگین)
+   ============================================================ */
 const DB = {
   get(key, def = []) {
     try { return JSON.parse(localStorage.getItem('void_' + key)) ?? def; }
@@ -1272,28 +1257,65 @@ const DB = {
   set(key, val) { localStorage.setItem('void_' + key, JSON.stringify(val)); }
 };
 
-const ADMIN_EMAIL = 'tahadaneshbayan2@gmail.com';
-
 let state = {
-  artworks: DB.get('artworks', []),
+  artworks: [],
   users: DB.get('users', []),
-  currentUser: DB.get('currentUser', null)
+  currentUser: DB.get('currentUser', null),
+  loaded: false
 };
 
-if (state.artworks.length === 0) {
-  state.artworks = [
-    { id: 1, title: 'لوگوی PvP', desc: 'طراحی اختصاصی برای سرورهای PvP با سبک ماینکرفتی و رنگ‌بندی گرم و جذاب.', icon: '⚔️', category: 'لوگو', tags: ['PvP', 'ماینکرفت'], image: null },
-    { id: 2, title: 'لوگوی SkyBlock', desc: 'طرح مینیمال و مدرن برای حالت SkyBlock با جزئیات ابر و آسمان.', icon: '☁️', category: 'لوگو', tags: ['SkyBlock', 'مینیمال'], image: null },
-    { id: 3, title: 'لوگوی Survival', desc: 'طراحی حرفه‌ای برای سرور Survival با المان‌های طبیعت و بقا.', icon: '🌲', category: 'لوگو', tags: ['Survival', 'طبیعت'], image: null },
-    { id: 4, title: 'لوگوی BedWars', desc: 'طرح شاد و رنگی برای BedWars با پالت رنگی زنده و چشم‌نواز.', icon: '🛏️', category: 'لوگو', tags: ['BedWars', 'رنگی'], image: null },
-    { id: 5, title: 'بنر یوتیوب', desc: 'بنر اختصاصی برای کانال یوتیوب گیمینگ با افکت نئون و درخشش.', icon: '🎬', category: 'بنر', tags: ['یوتیوب', 'نئون'], image: null },
-    { id: 6, title: 'تامبنیل استریم', desc: 'تامبنیل برای استریم Twitch با طراحی جذاب و کاملاً خوانا.', icon: '📺', category: 'تامبنیل', tags: ['Twitch', 'استریم'], image: null },
-    { id: 7, title: 'آیکون سرور', desc: 'آیکون مربعی برای سرور ماینکرفت با سبک پیکسلی و رنگ‌بندی خاص.', icon: '🎮', category: 'آیکون', tags: ['پیکسل', 'سرور'], image: null },
-    { id: 8, title: 'لوگوی کانال', desc: 'لوگوی شخصی برای کانال گیمینگ با حرف اختصاصی و افکت.', icon: '🎯', category: 'لوگو', tags: ['شخصی', 'گیمینگ'], image: null }
-  ];
-  DB.set('artworks', state.artworks);
+/* ============================================================
+   لودینگ
+   ============================================================ */
+const loadingOverlay = document.getElementById('loadingOverlay');
+const loadingText = document.getElementById('loadingText');
+
+function showLoading(text = 'در حال بارگذاری...') {
+  loadingText.textContent = text;
+  loadingOverlay.classList.add('active');
 }
 
+function hideLoading() {
+  loadingOverlay.classList.remove('active');
+}
+
+/* ============================================================
+   ارتباط با Worker
+   ============================================================ */
+async function loadArtworksFromServer() {
+  try {
+    const res = await fetch(`${WORKER_URL}/artworks?t=${Date.now()}`);
+    if (!res.ok) throw new Error('Server error');
+    const data = await res.json();
+    return data.artworks || [];
+  } catch (err) {
+    console.error('خطا در خواندن:', err);
+    return null;
+  }
+}
+
+async function saveArtworksToServer(artworks) {
+  try {
+    const res = await fetch(`${WORKER_URL}/artworks`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Auth-Key': AUTH_KEY
+      },
+      body: JSON.stringify({ artworks })
+    });
+
+    if (!res.ok) throw new Error('Save error');
+    return true;
+  } catch (err) {
+    console.error('خطا در ذخیره:', err);
+    return false;
+  }
+}
+
+/* ============================================================
+   کمکی
+   ============================================================ */
 function uid() {
   return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
 }
@@ -1673,7 +1695,7 @@ function renderAdmin() {
   }
 }
 
-function addArtwork(e) {
+async function addArtwork(e) {
   e.preventDefault();
   const title = document.getElementById('artTitle').value.trim();
   const category = document.getElementById('artCategory').value.trim();
@@ -1685,7 +1707,7 @@ function addArtwork(e) {
   if (!title) return toast('عنوان کار الزامی است', 'error');
   if (!category) return toast('دسته‌بندی الزامی است', 'error');
 
-  state.artworks.unshift({
+  const newArtwork = {
     id: uid(),
     title,
     category,
@@ -1693,26 +1715,58 @@ function addArtwork(e) {
     icon,
     tags,
     image: uploadedImage || null
-  });
+  };
 
-  DB.set('artworks', state.artworks);
+  showLoading('در حال ذخیره...');
+
+  const previousArtworks = [...state.artworks];
+  state.artworks.unshift(newArtwork);
   renderGallery();
   renderChips();
   renderAdmin();
-  e.target.reset();
-  document.getElementById('artIcon').value = '🎨';
-  removeUpload();
-  toast('کار جدید اضافه شد ✅', 'success');
+
+  const success = await saveArtworksToServer(state.artworks);
+
+  hideLoading();
+
+  if (success) {
+    e.target.reset();
+    document.getElementById('artIcon').value = '🎨';
+    removeUpload();
+    toast('کار جدید ذخیره شد ✅', 'success');
+  } else {
+    state.artworks = previousArtworks;
+    renderGallery();
+    renderChips();
+    renderAdmin();
+    toast('خطا در ذخیره توی سرور!', 'error');
+  }
 }
 
-function deleteArtwork(id) {
+async function deleteArtwork(id) {
   if (!confirm('مطمئنی می‌خوای این کار رو حذف کنی؟')) return;
+
+  showLoading('در حال حذف...');
+
+  const previousArtworks = [...state.artworks];
   state.artworks = state.artworks.filter(a => a.id != id);
-  DB.set('artworks', state.artworks);
   renderGallery();
   renderChips();
   renderAdmin();
-  toast('کار حذف شد', '');
+
+  const success = await saveArtworksToServer(state.artworks);
+
+  hideLoading();
+
+  if (success) {
+    toast('کار حذف شد', '');
+  } else {
+    state.artworks = previousArtworks;
+    renderGallery();
+    renderChips();
+    renderAdmin();
+    toast('خطا در حذف از سرور!', 'error');
+  }
 }
 
 /* ============================================================
@@ -1867,9 +1921,26 @@ function removeUpload() {
 /* ============================================================
    مقداردهی اولیه
    ============================================================ */
-renderChips();
-renderGallery();
-updateAuthUI();
+async function init() {
+  showLoading('در حال بارگذاری کارها...');
+
+  const artworks = await loadArtworksFromServer();
+
+  if (artworks === null) {
+    toast('خطا در ارتباط با سرور', 'error');
+    state.artworks = [];
+  } else {
+    state.artworks = artworks;
+  }
+
+  renderChips();
+  renderGallery();
+  updateAuthUI();
+
+  hideLoading();
+}
+
+init();
 </script>
 </body>
 </html>
