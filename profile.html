@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پروفایل — VOID GFX</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="brand">
+                <span class="brand-symbol">V</span>
+                <span>VOID<span class="purple">GFX</span></span>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html">گالری</a>
+                <a href="dashboard.html">داشبورد</a>
+            </nav>
+            <div class="nav-actions">
+                <button class="btn btn-ghost" id="logoutBtn">خروج</button>
+            </div>
+        </div>
+    </header>
+
+    <section class="section">
+        <div class="profile-header">
+            <div class="profile-avatar" id="avatar">U</div>
+            <div class="profile-info">
+                <h1 id="displayName">در حال بارگذاری...</h1>
+                <p id="displayEmail"></p>
+                <p style="color: var(--void-light); font-weight: 700;" id="displayUsername"></p>
+            </div>
+        </div>
+
+        <div class="section-heading">
+            <span class="section-label">آثار من</span>
+            <h2>فایل‌هایی که آپلود کردی</h2>
+        </div>
+
+        <div class="gfx-grid" id="myAssets">
+            <p style="grid-column:1/-1; text-align:center; color:#888;">در حال بارگذاری...</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-inner">
+            <div class="brand">
+                <span class="brand-symbol">V</span>
+                <span>VOID<span class="purple">GFX</span></span>
+            </div>
+            <p>© ۲۰۲۶ VOID GFX</p>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+        const SUPABASE_URL = "https://bqclfxdhxvswgmvdvtok.supabase.co";
+        const SUPABASE_KEY = "اینجا کلید Publishable خودت رو بذار";
+        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        async function loadProfile() {
+            const { data: { user } } = await supabase.auth.getUser();
+
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const username = user.user_metadata?.username || 'کاربر';
+            document.getElementById('displayName').textContent = username;
+            document.getElementById('displayEmail').textContent = user.email;
+            document.getElementById('displayUsername').textContent = '@' + username;
+            document.getElementById('avatar').textContent = username.charAt(0).toUpperCase();
+
+            // بارگذاری فایل‌های خود کاربر
+            const grid = document.getElementById('myAssets');
+            const { data, error } = await supabase
+                .from('assets')
+                .select('*')
+                .eq('user_id', user.id)
+                .order('created_at', { ascending: false });
+
+            if (error || !data || data.length === 0) {
+                grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#888;">هنوز فایلی آپلود نکردی.</p>';
+                return;
+            }
+
+            grid.innerHTML = data.map(item => `
+                <div class="gfx-card">
+                    <div class="gfx-preview">
+                        <img src="${item.preview_url || 'https://via.placeholder.com/400x300/1a1a2e/8b5cf6?text=No+Preview'}" alt="${item.title || 'Untitled'}">
+                    </div>
+                    <div class="gfx-info">
+                        <span class="gfx-category">${item.category || 'عمومی'}</span>
+                        <h3 class="gfx-title">${item.title || 'بدون عنوان'}</h3>
+                        <div class="gfx-meta">
+                            <span>♥ ${item.likes || 0}</span>
+                            <span>↓ ${item.downloads || 0}</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await supabase.auth.signOut();
+            window.location.href = 'index.html';
+        });
+
+        loadProfile();
+    </script>
+
+</body>
+</html>
