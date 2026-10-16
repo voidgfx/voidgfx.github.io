@@ -8,7 +8,6 @@
 </head>
 <body>
 
-    <!-- هدر -->
     <header class="navbar">
         <div class="nav-inner">
             <a href="index.html" class="brand">
@@ -26,8 +25,7 @@
         </div>
     </header>
 
-    <!-- هیرو -->
-    <section class="hero" style="padding: 80px 30px; text-align: center;">
+    <section style="padding: 80px 30px; text-align: center;">
         <h1 style="font-size: 3rem; font-weight: 900; margin-bottom: 20px;">
             اثرت رو بساز.<br>
             <span style="background: linear-gradient(135deg, var(--void-light), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">دنیات رو به اشتراک بذار.</span>
@@ -41,8 +39,7 @@
         </div>
     </section>
 
-    <!-- گالری -->
-    <section class="section" id="gallery" style="padding: 40px 30px; max-width: 1200px; margin: 0 auto;">
+    <section id="gallery" style="padding: 40px 30px; max-width: 1200px; margin: 0 auto;">
         <h2 style="margin-bottom: 30px; font-size: 2rem;">محتوای جدید</h2>
         <div class="gfx-grid" id="gfx-grid">
             <div style="text-align: center; color: var(--text-dim); grid-column: 1/-1; padding: 40px;">در حال بارگذاری...</div>
@@ -64,8 +61,6 @@
 
         async function loadAssets() {
             const grid = document.getElementById('gfx-grid');
-            if (!grid) return;
-
             const { data, error } = await supabase
                 .from('assets')
                 .select('*')
@@ -95,5 +90,7 @@
 
         loadAssets();
     </script>
+
+    <script type="module" src="app.js"></script>
 </body>
-                </html>
+</html>
