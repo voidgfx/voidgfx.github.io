@@ -24,7 +24,6 @@
     <div class="form-container" style="max-width: 600px;">
         <h1>آپلود فایل جدید</h1>
 
-        <!-- هشدارها -->
         <div class="alert alert-danger">
             ⚠️ <strong>هشدار مهم:</strong> آپلود محتوای بد، غیرقانونی یا ویروسی منجر به <strong>بن دائم</strong> می‌شود.
             مسئولیت هر فایلی که آپلود می‌کنید کاملاً بر عهده‌ی خودتان است.
@@ -81,7 +80,6 @@
         const uploadForm = document.getElementById('uploadForm');
         const uploadMessage = document.getElementById('uploadMessage');
 
-        // چک کردن لاگین بودن کاربر
         const { data: { user } } = await supabase.auth.getUser();
         if (!user) {
             window.location.href = 'auth.html';
@@ -99,7 +97,6 @@
             const file = fileInput.files[0];
             const preview = previewInput.files[0];
 
-            // چک پسوند فایل
             const ext = file.name.split('.').pop().toLowerCase();
             if (!ALLOWED_EXTENSIONS.includes(ext)) {
                 uploadMessage.textContent = '❌ این فرمت فایل مجاز نیست!';
@@ -107,14 +104,12 @@
                 return;
             }
 
-            // چک حجم فایل
             if (file.size > MAX_FILE_SIZE) {
                 uploadMessage.textContent = '❌ حجم فایل بیش از ۱۰ مگابایت است!';
                 uploadMessage.style.color = 'var(--danger)';
                 return;
             }
 
-            // چک حجم عکس
             if (preview.size > MAX_IMAGE_SIZE) {
                 uploadMessage.textContent = '❌ حجم عکس بیش از ۵ مگابایت است!';
                 uploadMessage.style.color = 'var(--danger)';
@@ -125,21 +120,18 @@
             uploadMessage.style.color = 'var(--void-light)';
 
             try {
-                // آپلود فایل اصلی
                 const filePath = `files/${Date.now()}-${file.name}`;
                 const { error: fileError } = await supabase.storage.from('assets').upload(filePath, file);
                 if (fileError) throw fileError;
 
                 const { data: fileUrlData } = supabase.storage.from('assets').getPublicUrl(filePath);
 
-                // آپلود عکس پیش‌نمایش
                 const previewPath = `previews/${Date.now()}-${preview.name}`;
                 const { error: previewError } = await supabase.storage.from('assets').upload(previewPath, preview);
                 if (previewError) throw previewError;
 
                 const { data: previewUrlData } = supabase.storage.from('assets').getPublicUrl(previewPath);
 
-                // ذخیره در دیتابیس
                 const { error: dbError } = await supabase.from('assets').insert([{
                     title,
                     description,
@@ -169,4 +161,4 @@
         });
     </script>
 </body>
-                             </html>
+    </html>
