@@ -20,7 +20,6 @@
     <div class="form-container">
         <h1 id="authTitle">ورود به حساب</h1>
 
-        <!-- فرم ورود -->
         <form id="loginForm">
             <div class="form-group">
                 <label>ایمیل</label>
@@ -36,7 +35,6 @@
             </p>
         </form>
 
-        <!-- فرم ثبت‌نام -->
         <form id="registerForm" style="display: none;">
             <div class="form-group">
                 <label>نام کاربری</label>
@@ -81,7 +79,6 @@
             authTitle.textContent = 'ورود به حساب';
         });
 
-        // ورود
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value;
@@ -96,7 +93,6 @@
             }
         });
 
-        // ثبت‌نام
         registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const username = document.getElementById('registerUsername').value;
