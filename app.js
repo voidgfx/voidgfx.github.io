@@ -21,7 +21,19 @@ export function escapeHTML(value) {
 }
 
 // =========================
-// مدیریت وضعیت لاگین در هدر
+// بررسی لاگین بودن کاربر
+// =========================
+export async function requireAuth() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+        window.location.href = 'auth.html';
+        return null;
+    }
+    return user;
+}
+
+// =========================
+// به‌روزرسانی دکمه ورود/پروفایل
 // =========================
 export async function updateAuthButton() {
     const authBtn = document.getElementById('authBtn');
@@ -39,33 +51,16 @@ export async function updateAuthButton() {
 }
 
 // =========================
-// بررسی لاگین بودن کاربر (برای صفحات محافظت‌شده)
-// =========================
-export async function requireAuth() {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-        window.location.href = 'auth.html';
-        return null;
-    }
-    return user;
-}
-
-// =========================
-// خروج از حساب
-// =========================
-export async function logout() {
-    await supabase.auth.signOut();
-    window.location.href = 'index.html';
-}
-
-// =========================
-// اجرای خودکار در همه صفحات
+// خروج
 // =========================
 document.addEventListener('DOMContentLoaded', () => {
     updateAuthButton();
 
     const logoutBtn = document.getElementById('logoutBtn');
     if (logoutBtn) {
-        logoutBtn.addEventListener('click', logout);
+        logoutBtn.addEventListener('click', async () => {
+            await supabase.auth.signOut();
+            window.location.href = 'index.html';
+        });
     }
 });
