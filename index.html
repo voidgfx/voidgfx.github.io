@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VOID GFX — گالری طراحی</title>
-    <link href="https://fonts.cdnfonts.com/css/minecraft-4" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -19,80 +17,69 @@
             </a>
             <nav class="nav-links">
                 <a href="index.html">گالری</a>
-                <a href="dashboard.html">داشبورد</a>
+                <a href="upload.html">آپلود</a>
                 <a href="profile.html">پروفایل</a>
             </nav>
             <div class="nav-actions">
-                <a href="login.html" class="btn btn-ghost" id="authBtn">ورود</a>
-                <a href="dashboard.html" class="btn btn-primary">آپلود</a>
+                <a href="auth.html" class="btn btn-primary" id="authBtn">ورود / ثبت‌نام</a>
             </div>
         </div>
     </header>
 
     <!-- هیرو -->
-    <section class="hero">
-        <h1>اثرت رو بساز.<br><span class="gradient-text">دنیات رو به اشتراک بذار.</span></h1>
-        <p>ریگ، مدل، تامنیل و محتوای باکیفیت ساخته‌شده توسط سازندگان رو کشف، دانلود و به اشتراک بذار.</p>
-        <div class="hero-actions">
+    <section class="hero" style="padding: 80px 30px; text-align: center;">
+        <h1 style="font-size: 3rem; font-weight: 900; margin-bottom: 20px;">
+            اثرت رو بساز.<br>
+            <span style="background: linear-gradient(135deg, var(--void-light), var(--gold)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">دنیات رو به اشتراک بذار.</span>
+        </h1>
+        <p style="color: var(--text-dim); font-size: 1.1rem; max-width: 600px; margin: 0 auto 30px;">
+            ریگ، مدل، تامنیل و محتوای باکیفیت ساخته‌شده توسط سازندگان رو کشف، دانلود و به اشتراک بذار.
+        </p>
+        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
             <a href="#gallery" class="btn btn-primary btn-large">مشاهده فایل‌ها</a>
-            <a href="dashboard.html" class="btn btn-ghost btn-large">آپلود اثرت</a>
+            <a href="upload.html" class="btn btn-ghost btn-large">آپلود اثرت</a>
         </div>
     </section>
 
     <!-- گالری -->
-    <section class="section" id="gallery">
-        <div class="section-heading">
-            <span class="section-label">کتابخانه جامعه</span>
-            <h2>محتوای جدید رو کشف کن.</h2>
-        </div>
+    <section class="section" id="gallery" style="padding: 40px 30px; max-width: 1200px; margin: 0 auto;">
+        <h2 style="margin-bottom: 30px; font-size: 2rem;">محتوای جدید</h2>
         <div class="gfx-grid" id="gfx-grid">
-            <div style="grid-column: 1/-1; text-align: center; color: var(--text-dim); padding: 40px;">
-                در حال بارگذاری...
-            </div>
+            <div style="text-align: center; color: var(--text-dim); grid-column: 1/-1; padding: 40px;">در حال بارگذاری...</div>
         </div>
     </section>
 
-    <!-- فوتر -->
     <footer>
         <div class="footer-inner">
             <div class="brand">
                 <span class="brand-symbol">V</span>
                 <span>VOID<span class="purple">GFX</span></span>
             </div>
-            <p>ساخته‌شده برای سازندگان.</p>
             <p>© ۲۰۲۶ VOID GFX</p>
         </div>
     </footer>
 
-    <!-- اتصال به Supabase و بارگذاری محتوا -->
     <script type="module">
-        import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
-
-        const SUPABASE_URL = "https://bqclfxdhxvswgmvdvtok.supabase.co";
-        const SUPABASE_KEY = "اینجا کلید Publishable خودت رو بذار";
-        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+        import { supabase } from './config.js';
 
         async function loadAssets() {
             const grid = document.getElementById('gfx-grid');
+            if (!grid) return;
+
             const { data, error } = await supabase
                 .from('assets')
                 .select('*')
                 .order('created_at', { ascending: false });
 
-            if (error) {
-                grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#ff4444;">خطا در بارگذاری.</p>';
-                return;
-            }
-
-            if (!data || data.length === 0) {
-                grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#888;">هنوز فایلی آپلود نشده است.</p>';
+            if (error || !data || data.length === 0) {
+                grid.innerHTML = '<p style="color: #888; text-align: center; grid-column: 1/-1;">هنوز فایلی آپلود نشده است.</p>';
                 return;
             }
 
             grid.innerHTML = data.map(item => `
                 <div class="gfx-card" onclick="window.location.href='asset.html?id=${item.id}'">
                     <div class="gfx-preview">
-                        <img src="${item.preview_url || 'https://via.placeholder.com/400x300/1a1a2e/8b5cf6?text=No+Preview'}" alt="${item.title || 'Untitled'}" loading="lazy">
+                        <img src="${item.preview_url || 'https://via.placeholder.com/400x300/1a1a2e/8b5cf6?text=No+Preview'}" alt="${item.title}">
                     </div>
                     <div class="gfx-info">
                         <span class="gfx-category">${item.category || 'عمومی'}</span>
@@ -106,21 +93,7 @@
             `).join('');
         }
 
-        // بررسی وضعیت لاگین
-        async function checkAuth() {
-            const { data: { user } } = await supabase.auth.getUser();
-            const authBtn = document.getElementById('authBtn');
-            if (user) {
-                authBtn.textContent = 'پروفایل من';
-                authBtn.href = 'profile.html';
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            loadAssets();
-            checkAuth();
-        });
+        loadAssets();
     </script>
-
 </body>
-</html>
+                </html>
