@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>داشبورد — VOID GFX</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="brand">
+                <span class="brand-symbol">V</span>
+                <span>VOID<span class="purple">GFX</span></span>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html">گالری</a>
+                <a href="profile.html">پروفایل</a>
+            </nav>
+            <div class="nav-actions">
+                <button class="btn btn-ghost" id="logoutBtn">خروج</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="form-container" style="max-width: 600px;">
+        <h2>آپلود فایل جدید 📤</h2>
+        <form id="uploadForm">
+            <div class="form-group">
+                <label for="title">اسم فایل</label>
+                <input type="text" id="title" placeholder="مثلاً ریگ ماینکرفت" required>
+            </div>
+            <div class="form-group">
+                <label for="description">توضیحات</label>
+                <textarea id="description" rows="3" placeholder="توضیح کوتاه..."></textarea>
+            </div>
+            <div class="form-group">
+                <label for="category">دسته‌بندی</label>
+                <select id="category">
+                    <option value="Rig">ریگ</option>
+                    <option value="Model">مدل</option>
+                    <option value="Thumbnail">تامنیل</option>
+                    <option value="Minecraft">ماینکرفت</option>
+                    <option value="Other">سایر</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="file">فایل اصلی</label>
+                <input type="file" id="file" required>
+            </div>
+            <div class="form-group">
+                <label for="preview">عکس پیش‌نمایش</label>
+                <input type="file" id="preview" accept="image/*">
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary btn-large" id="uploadBtn">آپلود</button>
+            </div>
+            <p class="form-message" id="message"></p>
+        </form>
+    </div>
+
+    <script type="module">
+        import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+        const SUPABASE_URL = "https://bqclfxdhxvswgmvdvtok.supabase.co";
+        const SUPABASE_KEY = "اینجا کلید Publishable خودت رو بذار";
+        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const form = document.getElementById('uploadForm');
+        const message = document.getElementById('message');
+        const btn = document.getElementById('uploadBtn');
+
+        async function uploadToStorage(file, folder = '') {
+            const fileName = `${Date.now()}-${file.name}`;
+            const path = folder ? `${folder}/${fileName}` : fileName;
+
+            const { error } = await supabase.storage
+                .from('assets')
+                .upload(path, file);
+
+            if (error) throw error;
+
+            const { data: urlData } = supabase.storage
+                .from('assets')
+                .getPublicUrl(path);
+
+            return urlData.publicUrl;
+        }
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            btn.disabled = true;
+            btn.textContent = 'در حال آپلود...';
+            message.textContent = '';
+
+            const { data: { user } } = await supabase.auth.getUser();
+            if (!user) {
+                message.textContent = 'اول وارد حساب شو.';
+                message.className = 'form-message error';
+                btn.disabled = false;
+                btn.textContent = 'آپلود';
+                return;
+            }
+
+            try {
+                const file = document.getElementById('file').files[0];
+                const preview = document.getElementById('preview').files[0];
+
+                const fileUrl = await uploadToStorage(file, 'files');
+                const previewUrl = preview ? await uploadToStorage(preview, 'previews') : '';
+
+                const { error } = await supabase
+                    .from('assets')
+                    .insert([{
+                        title: document.getElementById('title').value,
+                        description: document.getElementById('description').value,
+                        category: document.getElementById('category').value,
+                        file_url: fileUrl,
+                        preview_url: previewUrl,
+                        file_format: file.name.split('.').pop().toUpperCase(),
+                        file_size: file.size,
+                        user_id: user.id,
+                        likes: 0,
+                        downloads: 0
+                    }]);
+
+                if (error) throw error;
+
+                message.textContent = '✅ فایل با موفقیت آپلود شد!';
+                message.className = 'form-message success';
+                form.reset();
+                btn.disabled = false;
+                btn.textContent = 'آپلود';
+
+            } catch (error) {
+                console.error(error);
+                message.textContent = '❌ خطا: ' + error.message;
+                message.className = 'form-message error';
+                btn.disabled = false;
+                btn.textContent = 'آپلود';
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await supabase.auth.signOut();
+            window.location.href = 'index.html';
+        });
+    </script>
+
+</body>
+</html>
