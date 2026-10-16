@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آپلود فایل — VOID GFX</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="brand">
+                <span class="brand-symbol">V</span>
+                <span>VOID<span class="purple">GFX</span></span>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html">گالری</a>
+                <a href="profile.html">پروفایل</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="form-container" style="max-width: 600px;">
+        <h1>آپلود فایل جدید</h1>
+
+        <!-- هشدارها -->
+        <div class="alert alert-danger">
+            ⚠️ <strong>هشدار مهم:</strong> آپلود محتوای بد، غیرقانونی یا ویروسی منجر به <strong>بن دائم</strong> می‌شود.
+            مسئولیت هر فایلی که آپلود می‌کنید کاملاً بر عهده‌ی خودتان است.
+        </div>
+
+        <div class="alert alert-info">
+            📁 فقط فرمت‌های مجاز: ZIP, RAR, 7Z, PNG, JPG, PSD, BLEND, FBX, OBJ و...
+            <br>🚫 فایل‌های BAT, EXE, VBS, JS و هر فایل اجرایی خطرناک <strong>قبول نمی‌شوند.</strong>
+        </div>
+
+        <form id="uploadForm">
+            <div class="form-group">
+                <label>عنوان فایل *</label>
+                <input type="text" id="title" placeholder="مثلاً ریگ ماینکرفت" required>
+            </div>
+
+            <div class="form-group">
+                <label>دسته‌بندی *</label>
+                <select id="category" required>
+                    <option value="">انتخاب کنید...</option>
+                    <option value="Rig">ریگ</option>
+                    <option value="Model">مدل</option>
+                    <option value="Thumbnail">تامنیل</option>
+                    <option value="Minecraft">ماینکرفت</option>
+                    <option value="Other">سایر</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>توضیحات (حداکثر ۵۰۰ خط) *</label>
+                <textarea id="description" placeholder="توضیحات کامل فایل..." maxlength="50000" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>فایل اصلی *</label>
+                <input type="file" id="fileInput" required>
+                <small style="color: var(--text-dim); display: block; margin-top: 5px;">حداکثر ۱۰ مگابایت</small>
+            </div>
+
+            <div class="form-group">
+                <label>عکس پیش‌نمایش *</label>
+                <input type="file" id="previewInput" accept="image/*" required>
+                <small style="color: var(--text-dim); display: block; margin-top: 5px;">حداکثر ۵ مگابایت (JPG, PNG, GIF, WEBP)</small>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-large" style="width: 100%;">آپلود فایل</button>
+            <p id="uploadMessage" style="text-align: center; margin-top: 15px;"></p>
+        </form>
+    </div>
+
+    <script type="module">
+        import { supabase, ALLOWED_EXTENSIONS, MAX_FILE_SIZE, MAX_IMAGE_SIZE } from './config.js';
+
+        const uploadForm = document.getElementById('uploadForm');
+        const uploadMessage = document.getElementById('uploadMessage');
+
+        // چک کردن لاگین بودن کاربر
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+            window.location.href = 'auth.html';
+        }
+
+        uploadForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const title = document.getElementById('title').value;
+            const category = document.getElementById('category').value;
+            const description = document.getElementById('description').value;
+            const fileInput = document.getElementById('fileInput');
+            const previewInput = document.getElementById('previewInput');
+
+            const file = fileInput.files[0];
+            const preview = previewInput.files[0];
+
+            // چک پسوند فایل
+            const ext = file.name.split('.').pop().toLowerCase();
+            if (!ALLOWED_EXTENSIONS.includes(ext)) {
+                uploadMessage.textContent = '❌ این فرمت فایل مجاز نیست!';
+                uploadMessage.style.color = 'var(--danger)';
+                return;
+            }
+
+            // چک حجم فایل
+            if (file.size > MAX_FILE_SIZE) {
+                uploadMessage.textContent = '❌ حجم فایل بیش از ۱۰ مگابایت است!';
+                uploadMessage.style.color = 'var(--danger)';
+                return;
+            }
+
+            // چک حجم عکس
+            if (preview.size > MAX_IMAGE_SIZE) {
+                uploadMessage.textContent = '❌ حجم عکس بیش از ۵ مگابایت است!';
+                uploadMessage.style.color = 'var(--danger)';
+                return;
+            }
+
+            uploadMessage.textContent = '⏳ در حال آپلود...';
+            uploadMessage.style.color = 'var(--void-light)';
+
+            try {
+                // آپلود فایل اصلی
+                const filePath = `files/${Date.now()}-${file.name}`;
+                const { error: fileError } = await supabase.storage.from('assets').upload(filePath, file);
+                if (fileError) throw fileError;
+
+                const { data: fileUrlData } = supabase.storage.from('assets').getPublicUrl(filePath);
+
+                // آپلود عکس پیش‌نمایش
+                const previewPath = `previews/${Date.now()}-${preview.name}`;
+                const { error: previewError } = await supabase.storage.from('assets').upload(previewPath, preview);
+                if (previewError) throw previewError;
+
+                const { data: previewUrlData } = supabase.storage.from('assets').getPublicUrl(previewPath);
+
+                // ذخیره در دیتابیس
+                const { error: dbError } = await supabase.from('assets').insert([{
+                    title,
+                    description,
+                    category,
+                    file_url: fileUrlData.publicUrl,
+                    preview_url: previewUrlData.publicUrl,
+                    file_format: ext.toUpperCase(),
+                    file_size: file.size,
+                    downloads: 0,
+                    likes: 0,
+                    user_id: user.id
+                }]);
+
+                if (dbError) throw dbError;
+
+                uploadMessage.textContent = '✅ فایل با موفقیت آپلود شد!';
+                uploadMessage.style.color = 'var(--void-light)';
+                uploadForm.reset();
+
+                setTimeout(() => window.location.href = 'index.html', 2000);
+
+            } catch (err) {
+                console.error(err);
+                uploadMessage.textContent = '❌ خطا: ' + err.message;
+                uploadMessage.style.color = 'var(--danger)';
+            }
+        });
+    </script>
+</body>
+                             </html>
