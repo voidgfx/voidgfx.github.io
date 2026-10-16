@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جزئیات فایل — VOID GFX</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="nav-inner">
+            <a href="index.html" class="brand">
+                <span class="brand-symbol">V</span>
+                <span>VOID<span class="purple">GFX</span></span>
+            </a>
+            <nav class="nav-links">
+                <a href="index.html">گالری</a>
+                <a href="upload.html">آپلود</a>
+                <a href="profile.html">پروفایل</a>
+            </nav>
+        </div>
+    </header>
+
+    <main style="max-width: 900px; margin: 40px auto; padding: 0 20px;">
+        <div id="assetContent">
+            <p style="text-align: center; color: var(--text-dim);">در حال بارگذاری...</p>
+        </div>
+
+        <!-- بخش تبلیغات -->
+        <div class="ad-section" id="adSection" style="display: none;">
+            <h3 style="margin-bottom: 15px; color: var(--void-light);">📢 تبلیغات</h3>
+            <div id="adContent"></div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-inner">
+            <p>© ۲۰۲۶ VOID GFX</p>
+        </div>
+    </footer>
+
+    <script type="module">
+        import { supabase } from './config.js';
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const assetId = urlParams.get('id');
+
+        async function loadAsset() {
+            if (!assetId) {
+                document.getElementById('assetContent').innerHTML = '<p>فایل پیدا نشد.</p>';
+                return;
+            }
+
+            const { data, error } = await supabase
+                .from('assets')
+                .select('*')
+                .eq('id', assetId)
+                .single();
+
+            if (error || !data) {
+                document.getElementById('assetContent').innerHTML = '<p>فایل پیدا نشد.</p>';
+                return;
+            }
+
+            document.getElementById('assetContent').innerHTML = `
+                <div style="background: var(--surface-2); border-radius: var(--radius); padding: 30px; border: 1px solid var(--border);">
+                    <img src="${data.preview_url}" alt="${data.title}" style="width: 100%; max-height: 400px; object-fit: cover; border-radius: 10px; margin-bottom: 20px;">
+                    <span style="color: var(--void-light); font-weight: 700; font-size: 0.85rem;">${data.category}</span>
+                    <h1 style="margin: 10px 0; font-size: 2rem;">${data.title}</h1>
+                    <p style="color: var(--text-dim); line-height: 1.8; white-space: pre-wrap; margin-bottom: 20px;">${data.description}</p>
+                    
+                    <div style="display: flex; gap: 20px; margin-bottom: 20px; color: var(--gold); font-weight: 700;">
+                        <span>♥ ${data.likes || 0} لایک</span>
+                        <span>↓ ${data.downloads || 0} دانلود</span>
+                        <span>📦 ${data.file_format}</span>
+                    </div>
+
+                    <a href="${data.file_url}" download class="btn btn-primary btn-large" style="width: 100%; text-align: center;">دانلود فایل</a>
+                    
+                    <p style="margin-top: 20px; font-size: 0.8rem; color: var(--text-dim); text-align: center;">
+                        ⚠️ مسئولیت استفاده از این فایل بر عهده‌ی کاربر است. VOID GFX هیچ مسئولیتی در قبال محتوای آپلودشده ندارد.
+                    </p>
+                </div>
+            `;
+
+            // نمایش تبلیغات (این بخش رو بعداً می‌تونی از پنل ادمین پر کنی)
+            document.getElementById('adSection').style.display = 'block';
+            document.getElementById('adContent').innerHTML = `
+                <p style="color: var(--text-dim);">اینجا جای تبلیغات شماست.</p>
+                <p style="color: var(--text-dim); font-size: 0.8rem;">(می‌تونی از پنل ادمین، عکس یا گیف تبلیغاتی رو اینجا بذاری)</p>
+            `;
+        }
+
+        loadAsset();
+    </script>
+</body>
+  </html>
