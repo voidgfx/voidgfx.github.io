@@ -6,6 +6,32 @@
     <title>داشبورد — VOID GFX</title>
     <link rel="stylesheet" href="style.css">
 </head>
+    <script type="module">
+        import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+        const SUPABASE_URL = "https://bqclfxdhxvswgmvdvtok.supabase.co";
+        const SUPABASE_KEY = "اینجا کلید Publishable خودت رو بذار";
+        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        const ADMIN_EMAIL = "tahadaneshbayan2@gmail.com";
+
+        async function checkAdminAccess() {
+            const { data: { user }, error } = await supabase.auth.getUser();
+
+            // اگه کاربر لاگین نکرده یا ایمیلش با ایمیل ادمین فرق داره، بفرستش صفحه اصلی
+            if (error || !user || user.email !== ADMIN_EMAIL) {
+                alert('⛔ دسترسی ممنوع! این صفحه فقط برای مدیر سایت است.');
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // اگه ادمین بود، پیام خوش‌آمدگویی بده
+            console.log("✅ دسترسی ادمین تأیید شد:", user.email);
+        }
+
+        // اجرای بررسی دسترسی
+        checkAdminAccess();
+    </script>
 <body>
 
     <header class="navbar">
