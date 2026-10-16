@@ -16,66 +16,49 @@
             </a>
             <nav class="nav-links">
                 <a href="index.html">گالری</a>
-                <a href="dashboard.html">داشبورد</a>
+                <a href="upload.html">آپلود</a>
             </nav>
             <div class="nav-actions">
-                <button class="btn btn-ghost" id="logoutBtn">خروج</button>
+                <button id="logoutBtn" class="btn btn-ghost">خروج</button>
             </div>
         </div>
     </header>
 
-    <section class="section">
-        <div class="profile-header">
-            <div class="profile-avatar" id="avatar">U</div>
-            <div class="profile-info">
-                <h1 id="displayName">در حال بارگذاری...</h1>
-                <p id="displayEmail"></p>
-                <p style="color: var(--void-light); font-weight: 700;" id="displayUsername"></p>
-            </div>
+    <main style="max-width: 900px; margin: 40px auto; padding: 0 20px;">
+        <div style="background: var(--surface-2); border-radius: var(--radius); padding: 30px; border: 1px solid var(--border); margin-bottom: 30px;">
+            <h1 id="welcomeText">خوش آمدی!</h1>
+            <p id="userEmail" style="color: var(--text-dim);"></p>
         </div>
 
-        <div class="section-heading">
-            <span class="section-label">آثار من</span>
-            <h2>فایل‌هایی که آپلود کردی</h2>
-        </div>
-
+        <h2 style="margin-bottom: 20px;">فایل‌های من</h2>
         <div class="gfx-grid" id="myAssets">
-            <p style="grid-column:1/-1; text-align:center; color:#888;">در حال بارگذاری...</p>
+            <p style="color: var(--text-dim); grid-column: 1/-1;">در حال بارگذاری...</p>
         </div>
-    </section>
+    </main>
 
     <footer>
         <div class="footer-inner">
-            <div class="brand">
-                <span class="brand-symbol">V</span>
-                <span>VOID<span class="purple">GFX</span></span>
-            </div>
             <p>© ۲۰۲۶ VOID GFX</p>
         </div>
     </footer>
 
     <script type="module">
-        import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+        import { supabase } from './config.js';
 
-        const SUPABASE_URL = "https://bqclfxdhxvswgmvdvtok.supabase.co";
-        const SUPABASE_KEY = "اینجا کلید Publishable خودت رو بذار";
-        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) {
+            window.location.href = 'auth.html';
+        }
 
-        async function loadProfile() {
-            const { data: { user } } = await supabase.auth.getUser();
+        document.getElementById('welcomeText').textContent = `خوش آمدی، ${user.user_metadata?.username || 'کاربر'}!`;
+        document.getElementById('userEmail').textContent = user.email;
 
-            if (!user) {
-                window.location.href = 'login.html';
-                return;
-            }
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await supabase.auth.signOut();
+            window.location.href = 'index.html';
+        });
 
-            const username = user.user_metadata?.username || 'کاربر';
-            document.getElementById('displayName').textContent = username;
-            document.getElementById('displayEmail').textContent = user.email;
-            document.getElementById('displayUsername').textContent = '@' + username;
-            document.getElementById('avatar').textContent = username.charAt(0).toUpperCase();
-
-            // بارگذاری فایل‌های خود کاربر
+        async function loadMyAssets() {
             const grid = document.getElementById('myAssets');
             const { data, error } = await supabase
                 .from('assets')
@@ -84,18 +67,18 @@
                 .order('created_at', { ascending: false });
 
             if (error || !data || data.length === 0) {
-                grid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#888;">هنوز فایلی آپلود نکردی.</p>';
+                grid.innerHTML = '<p style="color: var(--text-dim); grid-column: 1/-1;">هنوز فایلی آپلود نکردی.</p>';
                 return;
             }
 
             grid.innerHTML = data.map(item => `
-                <div class="gfx-card">
+                <div class="gfx-card" onclick="window.location.href='asset.html?id=${item.id}'">
                     <div class="gfx-preview">
-                        <img src="${item.preview_url || 'https://via.placeholder.com/400x300/1a1a2e/8b5cf6?text=No+Preview'}" alt="${item.title || 'Untitled'}">
+                        <img src="${item.preview_url || 'https://via.placeholder.com/400x300/1a1a2e/8b5cf6?text=No+Preview'}" alt="${item.title}">
                     </div>
                     <div class="gfx-info">
-                        <span class="gfx-category">${item.category || 'عمومی'}</span>
-                        <h3 class="gfx-title">${item.title || 'بدون عنوان'}</h3>
+                        <span class="gfx-category">${item.category}</span>
+                        <h3 class="gfx-title">${item.title}</h3>
                         <div class="gfx-meta">
                             <span>♥ ${item.likes || 0}</span>
                             <span>↓ ${item.downloads || 0}</span>
@@ -105,13 +88,7 @@
             `).join('');
         }
 
-        document.getElementById('logoutBtn').addEventListener('click', async () => {
-            await supabase.auth.signOut();
-            window.location.href = 'index.html';
-        });
-
-        loadProfile();
+        loadMyAssets();
     </script>
-
 </body>
 </html>
