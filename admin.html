@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل ادمین | VOID GFX</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --primary: #8b5cf6;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+            --card: #1e293b;
+            --danger: #ef4444;
+            --success: #10b981;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Vazirmatn', sans-serif; }
+        body { background: var(--bg); color: var(--text); min-height: 100vh; }
+
+        /* صفحه لاگین */
+        #login-screen {
+            display: flex; justify-content: center; align-items: center; height: 100vh;
+        }
+        .login-box {
+            background: var(--card); padding: 40px; border-radius: 15px; width: 100%; max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1);
+        }
+        .login-box h2 { text-align: center; margin-bottom: 30px; color: var(--primary); }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; color: var(--muted); }
+        .form-group input, .form-group select {
+            width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #334155;
+            background: #0f172a; color: white; font-family: inherit;
+        }
+        .btn {
+            width: 100%; padding: 12px; border-radius: 8px; border: none; cursor: pointer;
+            font-weight: 700; font-family: inherit; transition: 0.3s;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #7c3aed; }
+        .btn-danger { background: var(--danger); color: white; padding: 6px 12px; width: auto; font-size: 0.8rem;}
+        .btn-danger:hover { background: #dc2626; }
+        .msg { text-align: center; margin-top: 15px; font-size: 0.9rem; }
+
+        /* پنل اصلی */
+        #admin-panel { display: none; padding: 30px; max-width: 1000px; margin: 0 auto; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .logout-btn { background: #334155; color: white; border: none; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+        
+        .grid { display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
+        @media (max-width: 768px) { .grid { grid-template-columns: 1fr; } }
+
+        .card { background: var(--card); padding: 25px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); }
+        .card h3 { margin-bottom: 20px; color: var(--primary); border-bottom: 1px solid #334155; padding-bottom: 10px; }
+
+        /* لیست کتاب‌ها */
+        .book-item {
+            display: flex; justify-content: space-between; align-items: center;
+            background: #0f172a; padding: 15px; border-radius: 8px; margin-bottom: 10px;
+        }
+        .book-item h4 { font-size: 1rem; }
+        .book-item p { font-size: 0.8rem; color: var(--muted); }
+    </style>
+</head>
+<body>
+
+    <!-- صفحه لاگین -->
+    <div id="login-screen">
+        <div class="login-box">
+            <h2>🔐 ورود به پنل ادمین</h2>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>ایمیل ادمین</label>
+                    <input type="email" id="email" placeholder="you@example.com" required>
+                </div>
+                <div class="form-group">
+                    <label>رمز عبور</label>
+                    <input type="password" id="password" placeholder="********" required>
+                </div>
+                <button type="submit" class="btn btn-primary">ورود</button>
+                <p id="loginMsg" class="msg"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- پنل ادمین -->
+    <div id="admin-panel">
+        <div class="header">
+            <h2>⚙️ مدیریت کتابخانه</h2>
+            <button class="logout-btn" id="logoutBtn">خروج</button>
+        </div>
+
+        <div class="grid">
+            <!-- فرم اضافه کردن -->
+            <div class="card">
+                <h3>➕ افزودن کتاب جدید</h3>
+                <form id="addBookForm">
+                    <div class="form-group">
+                        <label>عنوان کتاب</label>
+                        <input type="text" id="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label>نویسنده</label>
+                        <input type="text" id="author" required>
+                    </div>
+                    <div class="form-group">
+                        <label>دسته‌بندی</label>
+                        <select id="category">
+                            <option value="ادبیات کلاسیک">ادبیات کلاسیک</option>
+                            <option value="رمان">رمان</option>
+                            <option value="نجوم">نجوم</option>
+                            <option value="فلسفه">فلسفه</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>ایموجی جلد (مثلاً 📕)</label>
+                        <input type="text" id="cover" placeholder="📕" maxlength="2" required>
+                    </div>
+                    <div class="form-group">
+                        <label>لینک مستقیم PDF</label>
+                        <input type="url" id="pdf_url" placeholder="https://..." required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">ذخیره در دیتابیس</button>
+                    <p id="addMsg" class="msg"></p>
+                </form>
+            </div>
+
+            <!-- لیست کتاب‌ها -->
+            <div class="card">
+                <h3>📚 کتاب‌های فعلی</h3>
+                <div id="booksList">
+                    <p style="color: var(--muted);">در حال بارگذاری...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- اتصال به Supabase -->
+    <script type="module">
+        import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+        // 🔑 کلیدهای خودت رو اینجا بذار
+        const SUPABASE_URL = "https://bqclfxdhxvswgmvdvtok.supabase.co";
+        const SUPABASE_KEY = "اینجا کلید Publishable خودت رو بذار";
+
+        const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // المان‌ها
+        const loginScreen = document.getElementById('login-screen');
+        const adminPanel = document.getElementById('admin-panel');
+        const loginForm = document.getElementById('loginForm');
+        const loginMsg = document.getElementById('loginMsg');
+        const booksList = document.getElementById('booksList');
+        const addBookForm = document.getElementById('addBookForm');
+        const addMsg = document.getElementById('addMsg');
+
+        // بررسی وضعیت لاگین در ابتدا
+        async function checkUser() {
+            const { data: { user } } = await supabase.auth.getUser();
+            if (user) {
+                showPanel();
+            } else {
+                showLogin();
+            }
+        }
+
+        function showLogin() {
+            loginScreen.style.display = 'flex';
+            adminPanel.style.display = 'none';
+        }
+
+        function showPanel() {
+            loginScreen.style.display = 'none';
+            adminPanel.style.display = 'block';
+            loadBooks(); // لود کردن کتاب‌ها بعد از لاگین
+        }
+
+        // لاگین
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            loginMsg.textContent = "در حال ورود...";
+            loginMsg.style.color = "var(--muted)";
+
+            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) {
+                loginMsg.textContent = "❌ " + error.message;
+                loginMsg.style.color = "var(--danger)";
+            } else {
+                showPanel();
+            }
+        });
+
+        // خروج
+        document.getElementById('logoutBtn').addEventListener('click', async () => {
+            await supabase.auth.signOut();
+            showLogin();
+        });
+
+        // اضافه کردن کتاب
+        addBookForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('title').value;
+            const author = document.getElementById('author').value;
+            const category = document.getElementById('category').value;
+            const cover = document.getElementById('cover').value;
+            const pdf_url = document.getElementById('pdf_url').value;
+
+            addMsg.textContent = "در حال ذخیره...";
+            
+            const { error } = await supabase.from('books').insert([
+                { title, author, category, cover, pdf_url }
+            ]);
+
+            if (error) {
+                addMsg.textContent = "❌ خطا: " + error.message;
+                addMsg.style.color = "var(--danger)";
+            } else {
+                addMsg.textContent = "✅ کتاب با موفقیت اضافه شد!";
+                addMsg.style.color = "var(--success)";
+                addBookForm.reset();
+                loadBooks(); // رفرش لیست
+            }
+        });
+
+        // لود کردن لیست کتاب‌ها
+        async function loadBooks() {
+            const { data, error } = await supabase.from('books').select('*').order('created_at', { ascending: false });
+            
+            if (error) {
+                booksList.innerHTML = `<p style="color: var(--danger);">خطا در بارگذاری: ${error.message}</p>`;
+                return;
+            }
+
+            if (data.length === 0) {
+                booksList.innerHTML = `<p style="color: var(--muted);">هنوز کتابی اضافه نشده.</p>`;
+                return;
+            }
+
+            booksList.innerHTML = data.map(book => `
+                <div class="book-item">
+                    <div>
+                        <h4>${book.cover} ${book.title}</h4>
+                        <p>${book.author} - ${book.category}</p>
+                    </div>
+                    <button class="btn btn-danger" onclick="deleteBook(${book.id})">حذف</button>
+                </div>
+            `).join('');
+        }
+
+        // حذف کتاب
+        window.deleteBook = async (id) => {
+            if (!confirm("آیا از حذف این کتاب مطمئنی؟")) return;
+
+            const { error } = await supabase.from('books').delete().eq('id', id);
+            if (error) {
+                alert("خطا در حذف: " + error.message);
+            } else {
+                loadBooks(); // رفرش لیست
+            }
+        };
+
+        // اجرای اولیه
+        checkUser();
+    </script>
+</body>
+</html>
