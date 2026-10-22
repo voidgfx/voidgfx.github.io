@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>ورود / ثبت‌نام | VOID GFX</title>
+<link href="https://fonts.cdnfonts.com/css/minecraft-4" rel="stylesheet">
+<style>
+  @font-face {
+    font-family: 'Mikhak';
+    src: url('Mikhak-Medium.ttf?v=1') format('truetype');
+    font-display: swap;
+  }
+
+  :root {
+    --void: #8b5cf6;
+    --void-light: #a78bfa;
+    --void-dark: #6d28d9;
+    --gold: #fbbf24;
+    --bg: #08080f;
+    --surface: #12121e;
+    --surface-2: #1a1a2c;
+    --border: #2a2a42;
+    --text: #ececf5;
+    --muted: #8b8ba8;
+    --red: #f87171;
+    --green: #4ade80;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Mikhak', Tahoma, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    line-height: 1.75;
+    background-image: 
+      radial-gradient(circle at 20% 20%, rgba(139,92,246,0.10), transparent 55%),
+      radial-gradient(circle at 80% 80%, rgba(251,191,36,0.06), transparent 55%);
+  }
+
+  .auth-container {
+    width: 100%;
+    max-width: 440px;
+    background: linear-gradient(160deg, var(--surface), var(--surface-2));
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 32px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+    animation: modalIn 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    position: relative;
+  }
+
+  @keyframes modalIn {
+    from { opacity: 0; transform: scale(0.9) translateY(20px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .brand-header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .brand-header .logo {
+    font-family: 'Minecraft', 'Mikhak', sans-serif;
+    font-size: 2rem;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+  }
+
+  .brand-header .void { color: var(--void-light); text-shadow: 0 0 20px rgba(139,92,246,0.6); }
+  .brand-header .gfx { color: var(--gold); text-shadow: 0 0 20px rgba(251,191,36,0.6); }
+  
+  .brand-header p {
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  .tabs {
+    display: flex;
+    gap: 6px;
+    background: rgba(255,255,255,0.03);
+    padding: 5px;
+    border-radius: 14px;
+    margin-bottom: 24px;
+    border: 1px solid var(--border);
+  }
+
+  .tab {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    background: transparent;
+    color: var(--muted);
+    font-family: inherit;
+    font-size: 0.95rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 600;
+  }
+
+  .tab.active {
+    background: linear-gradient(135deg, var(--void), var(--void-dark));
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(139,92,246,0.4);
+  }
+
+  .form-group {
+    margin-bottom: 18px;
+  }
+
+  .form-label {
+    display: block;
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 13px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.02);
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.95rem;
+    outline: none;
+    transition: all 0.3s;
+    text-align: left;
+    direction: ltr;
+  }
+
+  .form-input:focus {
+    border-color: var(--void);
+    background: rgba(139,92,246,0.05);
+    box-shadow: 0 0 0 4px rgba(139,92,246,0.12);
+  }
+
+  .btn {
+    width: 100%;
+    padding: 14px;
+    border-radius: 12px;
+    border: none;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--void), var(--void-dark));
+    color: #fff;
+    box-shadow: 0 6px 20px rgba(139,92,246,0.4);
+    margin-top: 10px;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(139,92,246,0.6);
+  }
+
+  .form-error {
+    color: var(--red);
+    font-size: 0.82rem;
+    margin-top: 8px;
+    display: none;
+    background: rgba(248,113,113,0.1);
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(248,113,113,0.2);
+  }
+
+  .form-error.show { display: block; }
+
+  .back-link {
+    display: block;
+    text-align: center;
+    margin-top: 24px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.2s;
+  }
+
+  .back-link:hover { color: var(--void-light); }
+
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-right: 3px solid var(--green);
+    padding: 14px 24px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    font-size: 0.95rem;
+    transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    opacity: 0;
+    z-index: 1000;
+  }
+
+  .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="auth-container">
+  <div class="brand-header">
+    <div class="logo"><span class="void">VOID</span> <span class="gfx">GFX</span></div>
+    <p>به دنیای طراحی خوش آمدید</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" id="tabLogin" onclick="switchTab('login')">ورود</button>
+    <button class="tab" id="tabSignup" onclick="switchTab('signup')">ثبت‌نام</button>
+  </div>
+
+  <!-- فرم ورود -->
+  <form id="loginForm" onsubmit="handleLogin(event)">
+    <div class="form-group">
+      <label class="form-label">ایمیل</label>
+      <input type="email" class="form-input" id="loginEmail" required placeholder="example@mail.com">
+    </div>
+    <div class="form-group">
+      <label class="form-label">رمز عبور</label>
+      <input type="password" class="form-input" id="loginPassword" required placeholder="••••••••">
+    </div>
+    <div class="form-error" id="loginError"></div>
+    <button type="submit" class="btn btn-primary">ورود به حساب</button>
+  </form>
+
+  <!-- فرم ثبت‌نام -->
+  <form id="signupForm" style="display:none" onsubmit="handleSignup(event)">
+    <div class="form-group">
+      <label class="form-label">نام کاربری</label>
+      <input type="text" class="form-input" id="signupName" required placeholder="نام شما" style="text-align:right; direction:rtl;">
+    </div>
+    <div class="form-group">
+      <label class="form-label">ایمیل</label>
+      <input type="email" class="form-input" id="signupEmail" required placeholder="example@mail.com">
+    </div>
+    <div class="form-group">
+      <label class="form-label">رمز عبور</label>
+      <input type="password" class="form-input" id="signupPassword" required minlength="6" placeholder="حداقل ۶ کاراکتر">
+    </div>
+    <div class="form-error" id="signupError"></div>
+    <button type="submit" class="btn btn-primary">ساخت حساب جدید</button>
+  </form>
+
+  <a href="index.html" class="back-link">← بازگشت به سایت</a>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  // ============================================================
+  // سیستم مدیریت کاربران (ذخیره در localStorage)
+  // ============================================================
+  
+  function switchTab(tab) {
+    const isLogin = tab === 'login';
+    document.getElementById('tabLogin').classList.toggle('active', isLogin);
+    document.getElementById('tabSignup').classList.toggle('active', !isLogin);
+    document.getElementById('loginForm').style.display = isLogin ? 'block' : 'none';
+    document.getElementById('signupForm').style.display = isLogin ? 'none' : 'block';
+    
+    document.getElementById('loginError').classList.remove('show');
+    document.getElementById('signupError').classList.remove('show');
+  }
+
+  function showError(elId, msg) {
+    const el = document.getElementById(elId);
+    el.textContent = msg;
+    el.classList.add('show');
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  function uid() {
+    return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+  }
+
+  // ============================================================
+  // ثبت‌نام
+  // ============================================================
+  function handleSignup(e) {
+    e.preventDefault();
+    const name = document.getElementById('signupName').value.trim();
+    const email = document.getElementById('signupEmail').value.trim().toLowerCase();
+    const password = document.getElementById('signupPassword').value;
+
+    document.getElementById('signupError').classList.remove('show');
+
+    if (name.length < 2) return showError('signupError', 'نام باید حداقل ۲ کاراکتر باشد');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showError('signupError', 'ایمیل معتبر نیست');
+    if (password.length < 6) return showError('signupError', 'رمز عبور باید حداقل ۶ کاراکتر باشد');
+
+    let users = JSON.parse(localStorage.getItem('void_users') || '[]');
+    
+    if (users.some(u => u.email === email)) {
+      return showError('signupError', 'این ایمیل قبلاً ثبت شده است');
+    }
+
+    const passwordHash = btoa(unescape(encodeURIComponent(password + '::void_salt')));
+
+    const user = {
+      id: uid(),
+      name,
+      email,
+      passwordHash,
+      createdAt: new Date().toISOString()
+    };
+
+    users.push(user);
+    localStorage.setItem('void_users', JSON.stringify(users));
+
+    // ورود خودکار بعد از ثبت‌نام
+    const currentUser = { id: user.id, name: user.name, email: user.email };
+    localStorage.setItem('void_currentUser', JSON.stringify(currentUser));
+
+    showToast(`خوش آمدی ${name}! 🎉`);
+    setTimeout(() => window.location.href = 'index.html', 1500);
+  }
+
+  // ============================================================
+  // ورود
+  // ============================================================
+  function handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById('loginEmail').value.trim().toLowerCase();
+    const password = document.getElementById('loginPassword').value;
+
+    document.getElementById('loginError').classList.remove('show');
+
+    let users = JSON.parse(localStorage.getItem('void_users') || '[]');
+    
+    const user = users.find(u => u.email === email);
+    if (!user) return showError('loginError', 'کاربری با این ایمیل یافت نشد');
+
+    const hash = btoa(unescape(encodeURIComponent(password + '::void_salt')));
+    if (hash !== user.passwordHash) return showError('loginError', 'رمز عبور اشتباه است');
+
+    const currentUser = { id: user.id, name: user.name, email: user.email };
+    localStorage.setItem('void_currentUser', JSON.stringify(currentUser));
+
+    showToast(`خوش برگشتی ${user.name}! 👋`);
+    setTimeout(() => window.location.href = 'index.html', 1500);
+  }
+</script>
+
+</body>
+</html>
