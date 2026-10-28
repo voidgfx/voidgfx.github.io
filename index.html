@@ -3,21 +3,22 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Telegram Web Clone</title>
+    <title>Void Chat</title>
     
+    <!-- لود آیکون‌ها و فونت -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- لود Supabase (فقط یک بار) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Vazirmatn', sans-serif; }
-        
         body { background-color: #0e1621; height: 100vh; overflow: hidden; color: #fff; }
         
-        /* کانتینر اصلی: تمام صفحه */
         .app-layout { display: flex; height: 100vh; width: 100%; }
 
-        /* ================= سایدبار (لیست چت‌ها) ================= */
+        /* سایدبار */
         .sidebar {
             width: 350px;
             background-color: #17212b;
@@ -37,241 +38,130 @@
         }
 
         .btn-create-group {
-            background: #64b5f6;
-            color: #fff;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 8px;
-            font-size: 13px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-family: inherit;
-            font-weight: bold;
+            background: #64b5f6; color: #fff; border: none;
+            padding: 8px 15px; border-radius: 8px; font-size: 13px;
+            cursor: pointer; display: flex; align-items: center; gap: 5px;
+            font-family: inherit; font-weight: bold;
         }
         .btn-create-group:hover { background: #2481cc; }
 
-        .sidebar-title { font-size: 15px; font-weight: bold; color: #fff; }
-
-        /* لیست چت ها */
         .channel-list { flex: 1; overflow-y: auto; padding: 10px; }
-        
         .channel-item {
-            padding: 12px 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            margin-bottom: 5px;
-            display: flex;
-            flex-direction: column;
-            gap: 3px;
+            padding: 12px 15px; border-radius: 10px; cursor: pointer;
+            margin-bottom: 5px; display: flex; flex-direction: column; gap: 3px;
             transition: 0.2s;
         }
         .channel-item:hover { background: #182533; }
         .channel-item.active { background: #2b5278; }
-        
         .channel-name { font-weight: 700; font-size: 15px; color: #fff; }
         .channel-type { font-size: 11px; color: #7d8b99; }
-        .channel-item.active .channel-type { color: #a2d0f5; }
 
-        /* ================= بخش اصلی چت ================= */
+        /* بخش چت */
         .main-chat {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
+            flex: 1; display: flex; flex-direction: column;
             background-color: #0e1621;
-            background-image: url('https://web.telegram.org/img/bg_0.png');
-            background-size: cover;
-            background-blend-mode: overlay;
-            position: relative;
+            /* عکس پس زمینه حذف شد تا نیازی به اینترنت خارجی نباشه */
         }
 
-        /* هدر چت */
         .chat-header {
-            height: 60px;
-            background-color: #17212b;
-            display: flex;
-            align-items: center;
-            padding: 0 15px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-            z-index: 10;
-            gap: 15px;
+            height: 60px; background-color: #17212b;
+            display: flex; align-items: center; padding: 0 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2); z-index: 10; gap: 15px;
         }
         
         .mobile-menu-btn {
-            display: none;
-            background: transparent;
-            border: none;
-            color: #7d8b99;
-            font-size: 20px;
-            cursor: pointer;
+            display: none; background: transparent; border: none;
+            color: #7d8b99; font-size: 20px; cursor: pointer;
         }
 
         .chat-header-info h2 { font-size: 16px; font-weight: 700; color: #fff; }
         .chat-header-info p { font-size: 12px; color: #64b5f6; margin-top: 2px; }
 
-        /* ناحیه پیام ها */
         .chat-messages {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+            flex: 1; padding: 20px; overflow-y: auto;
+            display: flex; flex-direction: column; gap: 15px;
         }
 
-        /* حباب پیام */
         .msg-row { display: flex; width: 100%; }
         .msg-row.mine { justify-content: flex-end; }
         .msg-row.other { justify-content: flex-start; }
         
         .msg-bubble {
-            max-width: 75%;
-            padding: 10px 14px;
-            border-radius: 12px;
-            font-size: 14px;
-            line-height: 1.5;
-            position: relative;
+            max-width: 75%; padding: 10px 14px; border-radius: 12px;
+            font-size: 14px; line-height: 1.5; position: relative;
             box-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
-        .msg-row.mine .msg-bubble {
-            background: #2b5278;
-            border-top-right-radius: 2px;
-        }
-        .msg-row.other .msg-bubble {
-            background: #182533;
-            border-top-left-radius: 2px;
-        }
+        .msg-row.mine .msg-bubble { background: #2b5278; border-top-right-radius: 2px; }
+        .msg-row.other .msg-bubble { background: #182533; border-top-left-radius: 2px; }
 
         .msg-time {
-            font-size: 10px;
-            color: #7d8b99;
-            margin-top: 5px;
-            display: flex;
-            justify-content: flex-end;
-            align-items: center;
-            gap: 4px;
+            font-size: 10px; color: #7d8b99; margin-top: 5px;
+            display: flex; justify-content: flex-end; align-items: center; gap: 4px;
         }
         .msg-row.mine .msg-time { color: #8cb4d2; }
         .msg-time i { color: #64b5f6; font-size: 11px; }
 
-        /* ناحیه تایپ */
         .chat-input-area {
-            height: 65px;
-            background-color: #17212b;
-            display: flex;
-            align-items: center;
-            padding: 0 15px;
-            gap: 10px;
-            border-top: 1px solid #101921;
+            height: 65px; background-color: #17212b;
+            display: flex; align-items: center; padding: 0 15px;
+            gap: 10px; border-top: 1px solid #101921;
         }
         
         .input-wrapper {
-            flex: 1;
-            background: #182533;
-            border-radius: 20px;
-            padding: 10px 15px;
-            display: flex;
-            align-items: center;
+            flex: 1; background: #182533; border-radius: 20px;
+            padding: 10px 15px; display: flex; align-items: center;
         }
         .input-wrapper input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            outline: none;
-            color: #fff;
-            font-size: 14px;
-            font-family: inherit;
+            flex: 1; background: transparent; border: none;
+            outline: none; color: #fff; font-size: 14px; font-family: inherit;
         }
         
         .send-btn {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: #64b5f6;
-            border: none;
-            color: #fff;
-            font-size: 18px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.2s;
+            width: 45px; height: 45px; border-radius: 50%;
+            background: #64b5f6; border: none; color: #fff; font-size: 18px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s;
         }
-        .send-btn:hover { background: #2481cc; transform: scale(1.05); }
+        .send-btn:hover { background: #2481cc; }
 
-        /* ================= مودال ================= */
+        /* مودال */
         .modal-overlay {
-            position: fixed; inset: 0;
-            background: rgba(0,0,0,0.7);
-            z-index: 100;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(3px);
+            position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100;
+            display: none; align-items: center; justify-content: center; backdrop-filter: blur(3px);
         }
         .modal-overlay.open { display: flex; }
         
         .modal-box {
-            background: #17212b;
-            width: 90%;
-            max-width: 400px;
-            padding: 25px;
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            border: 1px solid #101921;
+            background: #17212b; width: 90%; max-width: 400px;
+            padding: 25px; border-radius: 12px; display: flex;
+            flex-direction: column; gap: 15px; border: 1px solid #101921;
         }
         .modal-box h3 { text-align: center; color: #fff; margin-bottom: 5px; font-size: 18px;}
         
         .modal-box input, .modal-box select {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid #101921;
-            background: #0e1621;
-            color: #fff;
-            outline: none;
-            font-family: inherit;
+            width: 100%; padding: 12px; border-radius: 8px;
+            border: 1px solid #101921; background: #0e1621; color: #fff;
+            outline: none; font-family: inherit;
         }
-        .modal-box input:focus, .modal-box select:focus { border-color: #64b5f6; }
         
         .modal-box button {
-            width: 100%;
-            padding: 12px;
-            border-radius: 8px;
-            border: none;
-            cursor: pointer;
-            font-family: inherit;
-            font-weight: bold;
-            font-size: 14px;
+            width: 100%; padding: 12px; border-radius: 8px; border: none;
+            cursor: pointer; font-family: inherit; font-weight: bold; font-size: 14px;
         }
         .btn-submit { background: #64b5f6; color: #fff; }
-        .btn-submit:hover { background: #2481cc; }
         .btn-cancel { background: #2b5278; color: #fff; }
-        .btn-cancel:hover { background: #1a3b5c; }
 
-        /* اسکرول بار */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #2b5278; border-radius: 3px; }
 
-        /* ================= ریسپانسیو (موبایل) ================= */
         @media (max-width: 768px) {
             .sidebar {
-                position: fixed;
-                top: 0;
-                right: 0;
-                height: 100%;
-                z-index: 50;
-                transform: translateX(100%);
+                position: fixed; top: 0; right: 0; height: 100%;
+                z-index: 50; transform: translateX(100%);
                 box-shadow: -5px 0 15px rgba(0,0,0,0.5);
             }
             .sidebar.open { transform: translateX(0); }
-            
             .mobile-menu-btn { display: block; }
-            
-            .btn-create-group span { display: none; } /* فقط آیکون + در موبایل */
+            .btn-create-group span { display: none; }
             .btn-create-group { padding: 10px; border-radius: 50%; width: 40px; height: 40px; justify-content: center; }
         }
     </style>
@@ -280,16 +170,15 @@
 
     <div class="app-layout">
         
-        <!-- سایدبار (لیست چت ها) -->
+        <!-- سایدبار -->
         <div class="sidebar" id="sidebar">
             <div class="sidebar-header">
-                <span class="sidebar-title">گفتگوها</span>
+                <span style="font-size: 15px; font-weight: bold;">گفتگوها</span>
                 <button class="btn-create-group" onclick="openCreateModal()">
                     <i class="fa-solid fa-plus"></i> <span>گروه جدید</span>
                 </button>
             </div>
             <div class="channel-list" id="channelListContainer">
-                <!-- لیست از دیتابیس لود میشه -->
                 <div style="text-align: center; color: #7d8b99; padding: 20px;">در حال بارگذاری...</div>
             </div>
         </div>
@@ -317,7 +206,7 @@
         </div>
     </div>
 
-    <!-- مودال ساخت گروه -->
+    <!-- مودال -->
     <div class="modal-overlay" id="createModal">
         <div class="modal-box">
             <h3>ساخت گروه / کانال جدید</h3>
@@ -332,11 +221,14 @@
     </div>
 
 <script>
-    // ⚠️ اینجا آدرس و کلید anon خودت رو بذار
-    const supabaseUrl = 'https://uesuqjspbpwrytojvtqn.supabase.co/rest/v1/'; 
+    // =======================================================
+    // ⚠️ این دو خط رو با اطلاعات Supabase خودت جایگزین کن ⚠️
+    // =======================================================
+    const supabaseUrl = 'https://uesuqjspbpwrytojvtqn.supabase.co'; 
     const supabaseKey = 'sb_publishable_CDnmuvscv-2neF5qaNnGEg_mfkkzqvc';
     
-    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    // ایجاد کلاینت
+    const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
     let currentUserName = localStorage.getItem('chat_username') || prompt('اسم خودت رو وارد کن:');
     if (currentUserName) localStorage.setItem('chat_username', currentUserName);
@@ -349,134 +241,146 @@
         loadChannels();
     });
 
-    // آپدیت وضعیت
     async function updateStatus() {
         const statusEl = document.getElementById('connectionStatus');
-        const { error } = await supabase.from('channels').select('*').limit(1);
-        if (error) {
-            statusEl.innerText = 'خطا در اتصال!';
-            statusEl.style.color = 'red';
-        } else {
+        try {
+            const { error } = await supabaseClient.from('channels').select('*').limit(1);
+            if (error) throw error;
             statusEl.innerText = 'آنلاین';
+            statusEl.style.color = '#64b5f6';
+        } catch (err) {
+            statusEl.innerText = 'خطا در اتصال! VPN را روشن کنید.';
+            statusEl.style.color = 'red';
+            console.error(err);
         }
     }
 
-    // سایدبار موبایل
     function toggleSidebar() {
         document.getElementById('sidebar').classList.toggle('open');
     }
 
-    // مودال
-    function openCreateModal() { document.getElementById('createModal').classList.add('open'); }
-    function closeCreateModal() { document.getElementById('createModal').classList.remove('open'); }
+    function openCreateModal() {
+        document.getElementById('createModal').classList.add('open');
+    }
+    function closeCreateModal() {
+        document.getElementById('createModal').classList.remove('open');
+    }
 
-    // ساخت گروه
     async function createGroup() {
         const name = document.getElementById('newGroupName').value;
         const type = document.getElementById('newGroupType').value;
 
         if (!name) return alert('اسم رو وارد کن!');
 
-        const { error } = await supabase.from('channels').insert({ name, type });
-        
-        if (error) {
-            alert('خطا: ' + error.message);
-        } else {
+        try {
+            const { error } = await supabaseClient.from('channels').insert({ name, type });
+            if (error) throw error;
+            
             closeCreateModal();
             document.getElementById('newGroupName').value = '';
             loadChannels();
+        } catch (err) {
+            alert('خطا در ساخت گروه: ' + err.message);
         }
     }
 
-    // لود لیست
     async function loadChannels() {
-        const { data, error } = await supabase.from('channels').select('*');
-        if (error) return console.error(error);
+        try {
+            const { data, error } = await supabaseClient.from('channels').select('*');
+            if (error) throw error;
 
-        const container = document.getElementById('channelListContainer');
-        container.innerHTML = '';
+            const container = document.getElementById('channelListContainer');
+            container.innerHTML = '';
 
-        if (data.length === 0) {
-            container.innerHTML = '<div style="text-align: center; color: #7d8b99; padding: 20px;">گروهی وجود ندارد.</div>';
-            return;
+            if (data.length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: #7d8b99; padding: 20px;">گروهی وجود ندارد.</div>';
+                return;
+            }
+
+            data.forEach(ch => {
+                const div = document.createElement('div');
+                div.className = `channel-item ${currentChannelId === ch.id ? 'active' : ''}`;
+                div.innerHTML = `
+                    <div class="channel-name">${ch.name}</div>
+                    <div class="channel-type">${ch.type === 'group' ? 'گروه' : 'کانال'}</div>
+                `;
+                div.onclick = () => {
+                    currentChannelId = ch.id;
+                    document.getElementById('chatTitle').innerText = ch.name;
+                    if (window.innerWidth < 768) toggleSidebar();
+                    loadChannels();
+                    loadMessages();
+                };
+                container.appendChild(div);
+            });
+        } catch (err) {
+            console.error(err);
         }
-
-        data.forEach(ch => {
-            const div = document.createElement('div');
-            div.className = `channel-item ${currentChannelId === ch.id ? 'active' : ''}`;
-            div.innerHTML = `
-                <div class="channel-name">${ch.name}</div>
-                <div class="channel-type">${ch.type === 'group' ? 'گروه' : 'کانال'}</div>
-            `;
-            div.onclick = () => {
-                currentChannelId = ch.id;
-                document.getElementById('chatTitle').innerText = ch.name;
-                if (window.innerWidth < 768) toggleSidebar(); // بستن سایدبار در موبایل
-                loadChannels(); // برای آپدیت حالت فعال
-                loadMessages();
-            };
-            container.appendChild(div);
-        });
     }
 
-    // لود پیام
     async function loadMessages() {
         if (!currentChannelId) return;
 
-        const { data, error } = await supabase
-            .from('messages')
-            .select('*')
-            .eq('channel_id', currentChannelId)
-            .order('created_at', { ascending: true });
+        try {
+            const { data, error } = await supabaseClient
+                .from('messages')
+                .select('*')
+                .eq('channel_id', currentChannelId)
+                .order('created_at', { ascending: true });
 
-        if (error) return console.error(error);
+            if (error) throw error;
 
-        const container = document.getElementById('chatArea');
-        container.innerHTML = '';
+            const container = document.getElementById('chatArea');
+            container.innerHTML = '';
 
-        if (data.length === 0) {
-            container.innerHTML = '<div style="text-align: center; color: #7d8b99; margin-top: 20px;">هیچ پیامی نیست.</div>';
-            return;
+            if (data.length === 0) {
+                container.innerHTML = '<div style="text-align: center; color: #7d8b99; margin-top: 20px;">هیچ پیامی نیست.</div>';
+                return;
+            }
+
+            data.forEach(msg => {
+                const isMine = msg.sender_name === currentUserName;
+                const msgDiv = document.createElement('div');
+                msgDiv.className = `msg-row ${isMine ? 'mine' : 'other'}`;
+                
+                const time = new Date(msg.created_at).toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
+                const checkIcon = isMine ? '<i class="fa-solid fa-check-double"></i>' : '';
+
+                msgDiv.innerHTML = `
+                    <div class="msg-bubble">
+                        <div>${msg.content}</div>
+                        <div class="msg-time">${time} ${checkIcon}</div>
+                    </div>
+                `;
+                container.appendChild(msgDiv);
+            });
+
+            container.scrollTop = container.scrollHeight;
+            setupRealtime();
+        } catch (err) {
+            console.error(err);
         }
-
-        data.forEach(msg => {
-            const isMine = msg.sender_name === currentUserName;
-            const msgDiv = document.createElement('div');
-            msgDiv.className = `msg-row ${isMine ? 'mine' : 'other'}`;
-            
-            const time = new Date(msg.created_at).toLocaleTimeString('fa-IR', { hour: '2-digit', minute: '2-digit' });
-            const checkIcon = isMine ? '<i class="fa-solid fa-check-double"></i>' : '';
-
-            msgDiv.innerHTML = `
-                <div class="msg-bubble">
-                    <div>${msg.content}</div>
-                    <div class="msg-time">${time} ${checkIcon}</div>
-                </div>
-            `;
-            container.appendChild(msgDiv);
-        });
-
-        container.scrollTop = container.scrollHeight;
-        setupRealtime();
     }
 
-    // ارسال پیام
     async function sendMessage() {
         const input = document.getElementById('messageInput');
         const text = input.value.trim();
         
         if (!text || !currentChannelId) return;
 
-        const { error } = await supabase.from('messages').insert({
-            channel_id: currentChannelId,
-            sender_name: currentUserName,
-            content: text
-        });
+        try {
+            const { error } = await supabaseClient.from('messages').insert({
+                channel_id: currentChannelId,
+                sender_name: currentUserName,
+                content: text
+            });
 
-        if (error) alert(error.message);
-        else {
+            if (error) throw error;
+            
             input.value = '';
             loadMessages();
+        } catch (err) {
+            alert('خطا در ارسال: ' + err.message);
         }
     }
 
@@ -484,11 +388,10 @@
         if (event.key === 'Enter') sendMessage();
     }
 
-    // ری‌اکت زنده
     function setupRealtime() {
-        if (realtimeChannel) supabase.removeChannel(realtimeChannel);
+        if (realtimeChannel) supabaseClient.removeChannel(realtimeChannel);
 
-        realtimeChannel = supabase
+        realtimeChannel = supabaseClient
             .channel('room-' + currentChannelId)
             .on('postgres_changes', { 
                 event: 'INSERT', schema: 'public', table: 'messages',
