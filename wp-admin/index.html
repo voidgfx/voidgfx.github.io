@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پنل مدیریت | آکادمی دانش</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root { --gold-primary: #c5a059; --leaf-green: #2e5c3e; --text-main: #2c2c2c; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Vazirmatn', sans-serif; background: #f4efdf; display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; }
+        
+        .admin-box { background: #fff; width: 100%; max-width: 500px; padding: 40px; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.08); border-top: 6px solid var(--gold-primary); }
+        h2 { text-align: center; color: var(--leaf-green); margin-bottom: 30px; font-weight: 900; font-size: 24px;}
+        
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 14px; margin-bottom: 8px; color: #666; font-weight: bold; }
+        .form-group input { width: 100%; padding: 14px; border: 1px solid #ddd; border-radius: 10px; font-family: inherit; outline: none; transition: 0.3s; background: #fafafa;}
+        .form-group input:focus { border-color: var(--gold-primary); background: #fff; box-shadow: 0 0 0 3px rgba(197, 160, 89, 0.1); }
+        
+        .btn { width: 100%; padding: 15px; border: none; border-radius: 10px; font-family: inherit; font-weight: 900; font-size: 16px; cursor: pointer; transition: 0.3s; margin-top: 10px; display: flex; justify-content: center; align-items: center; gap: 10px;}
+        .btn-save { background: var(--leaf-green); color: #fff; }
+        .btn-save:hover { background: #1f422b; transform: translateY(-2px); }
+        .btn-logout { background: #fee2e2; color: #d32f2f; display: none; margin-top: 15px;}
+        .btn-logout:hover { background: #fca5a5; color: #7f1d1d; }
+        
+        .msg { text-align: center; margin-top: 15px; font-weight: bold; font-size: 14px; padding: 10px; border-radius: 8px; display: none;}
+        .msg-error { background: #fee2e2; color: #d32f2f; }
+        .msg-success { background: #dcfce7; color: #166534; }
+    </style>
+</head>
+<body>
+
+    <div class="admin-box">
+        <!-- فرم لاگین -->
+        <div id="loginSection">
+            <h2>🔐 ورود مدیر</h2>
+            <div class="form-group">
+                <label>ایمیل</label>
+                <input type="email" id="email" placeholder="admin@site.com">
+            </div>
+            <div class="form-group">
+                <label>رمز عبور</label>
+                <input type="password" id="password" placeholder="********">
+            </div>
+            <button class="btn btn-save" onclick="login()"><i class="fa-solid fa-right-to-bracket"></i> ورود به پنل</button>
+            <div class="msg" id="loginMsg"></div>
+        </div>
+
+        <!-- فرم اضافه کردن -->
+        <div id="addSection" style="display:none;">
+            <h2>📝 افزودن جزوه جدید</h2>
+            <div class="form-group"><label>عنوان جزوه</label><input type="text" id="title" placeholder="مثلا: جزوه فصل ۱ ریاضی"></div>
+            <div class="form-group"><label>نویسنده / منبع</label><input type="text" id="author" placeholder="مثلا: مسعود زیرکاری"></div>
+            <div class="form-group"><label>نوع فایل</label><input type="text" id="type" placeholder="مثلا: درسنامه + تمرین"></div>
+            <div class="form-group"><label>لینک دانلود (URL)</label><input type="text" id="link" placeholder="https://example.com/file.pdf"></div>
+            <button class="btn btn-save" onclick="addJozve()"><i class="fa-solid fa-floppy-disk"></i> ذخیره در دیتابیس</button>
+            <button class="btn btn-logout" id="logoutBtn" onclick="logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> خروج از حساب</button>
+            <div class="msg" id="addMsg"></div>
+        </div>
+    </div>
+
+<script>
+    const supabaseUrl = 'https://quvmycjmphfufodygrfe.supabase.co'; 
+    const supabaseKey = 'sb_publishable_yJMUW7s7PGzq1bILJwFbKw_HM0FE57D'; 
+    const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    async function checkSession() {
+        const { data: { session } } = await supabaseClient.auth.getSession();
+        if (session) showAddForm();
+    }
+
+    function showAddForm() {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('addSection').style.display = 'block';
+        document.getElementById('logoutBtn').style.display = 'flex';
+    }
+
+    function showMsg(id, text, type) {
+        const el = document.getElementById(id);
+        el.innerText = text;
+        el.className = `msg msg-${type}`;
+        el.style.display = 'block';
+    }
+
+    async function login() {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        
+        showMsg('loginMsg', 'در حال بررسی...', 'success');
+        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+        if (error) {
+            showMsg('loginMsg', "خطا: " + error.message, 'error');
+        } else {
+            document.getElementById('loginMsg').style.display = 'none';
+            showAddForm();
+        }
+    }
+
+    async function logout() {
+        await supabaseClient.auth.signOut();
+        window.location.reload();
+    }
+
+    async function addJozve() {
+        const title = document.getElementById('title').value;
+        const author = document.getElementById('author').value;
+        const type = document.getElementById('type').value;
+        const link = document.getElementById('link').value;
+
+        if (!title || !link) {
+            showMsg('addMsg', "عنوان و لینک الزامی است!", 'error');
+            return;
+        }
+
+        showMsg('addMsg', 'در حال ذخیره...', 'success');
+        const { error } = await supabaseClient.from('jozve_list').insert({ title, author, type, link });
+
+        if (error) {
+            showMsg('addMsg', "خطا در ذخیره: " + error.message, 'error');
+        } else {
+            showMsg('addMsg', "✅ جزوه با موفقیت اضافه شد!", 'success');
+            document.getElementById('title').value = '';
+            document.getElementById('author').value = '';
+            document.getElementById('type').value = '';
+            document.getElementById('link').value = '';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', checkSession);
+</script>
+</body>
+</html>
