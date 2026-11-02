@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مشاهده جزوه | آکادمی دانش</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root { --gold-primary: #c5a059; --leaf-green: #2e5c3e; --text-main: #2c2c2c; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Vazirmatn', sans-serif; background: linear-gradient(135deg, #ffffff 0%, #f4efdf 100%); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
+        
+        header { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 10; }
+        .logo { font-size: 22px; font-weight: 900; color: var(--leaf-green); display: flex; align-items: center; gap: 10px; }
+        .logo i { color: var(--gold-primary); }
+        .back-link { text-decoration: none; color: var(--gold-primary); font-weight: 900; display: flex; align-items: center; gap: 8px; transition: 0.3s; background: #fff; padding: 8px 20px; border-radius: 50px; border: 1px solid var(--gold-primary); }
+        .back-link:hover { background: var(--gold-primary); color: #fff; }
+
+        .container { flex: 1; padding: 50px 20px; display: flex; flex-direction: column; align-items: center; }
+        .view-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px); padding: 40px; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.05); text-align: center; max-width: 950px; width: 100%; border: 1px solid rgba(197, 160, 89, 0.3); }
+        
+        .view-card h1 { color: var(--leaf-green); font-size: 32px; margin-bottom: 10px; font-weight: 900; }
+        .meta { color: #888; font-size: 15px; margin-bottom: 30px; display: flex; justify-content: center; gap: 20px; }
+        
+        .action-buttons { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
+        .btn-download { background: linear-gradient(135deg, var(--gold-primary) 0%, #9e7f3d 100%); color: #fff; padding: 15px 35px; border-radius: 12px; text-decoration: none; font-size: 16px; font-weight: 900; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 8px 20px rgba(197, 160, 89, 0.3); transition: 0.3s; }
+        .btn-download:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba(197, 160, 89, 0.5); }
+        
+        .btn-share { background: #fff; color: var(--leaf-green); padding: 15px 35px; border-radius: 12px; text-decoration: none; font-size: 16px; font-weight: 900; border: 2px solid var(--leaf-green); display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; cursor: pointer;}
+        .btn-share:hover { background: var(--leaf-green); color: #fff; }
+
+        .pdf-viewer { width: 100%; height: 700px; border: 2px dashed rgba(197, 160, 89, 0.5); border-radius: 12px; background: #fafafa; margin-top: 20px; overflow: hidden; position: relative;}
+        .pdf-viewer iframe { width: 100%; height: 100%; border: none; }
+        
+        footer { background: #1a1a1a; color: #fff; text-align: center; padding: 30px; border-top: 4px solid var(--gold-primary); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo"><i class="fa-solid fa-graduation-cap"></i> آکادمی دانش</div>
+        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-right"></i> بازگشت به لیست</a>
+    </header>
+
+    <div class="container">
+        <div class="view-card" id="card-content">
+            <p>در حال دریافت اطلاعات جزوه...</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>تمامی حقوق برای آکادمی دانش محفوظ است. © ۱۴۰۵</p>
+    </footer>
+
+<script>
+    const supabaseUrl = 'https://quvmycjmphfufodygrfe.supabase.co'; 
+    const supabaseKey = 'sb_publishable_yJMUW7s7PGzq1bILJwFbKw_HM0FE57D'; 
+    const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    async function loadJozve() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const jozveId = urlParams.get('id');
+
+        if (!jozveId) {
+            document.getElementById('card-content').innerHTML = '<p>خطا: جزوه‌ای انتخاب نشده است.</p>';
+            return;
+        }
+
+        try {
+            const { data, error } = await supabaseClient.from('jozve_list').select('*').eq('id', jozveId).single();
+            if (error) throw error;
+
+            // بررسی اینکه آیا لینک به PDF ختم میشه یا نه
+            const isPdf = data.link.toLowerCase().includes('.pdf');
+
+            document.getElementById('card-content').innerHTML = `
+                <h1>${data.title}</h1>
+                <div class="meta">
+                    <span><i class="fa-solid fa-user-pen"></i> ${data.author || 'نامشخص'}</span>
+                    <span><i class="fa-solid fa-tag"></i> ${data.type || 'جزوه'}</span>
+                </div>
+                
+                <div class="action-buttons">
+                    <a href="${data.link}" target="_blank" class="btn-download">
+                        <i class="fa-solid fa-download"></i> دانلود فایل
+                    </a>
+                    <button onclick="shareLink()" class="btn-share">
+                        <i class="fa-solid fa-share-nodes"></i> اشتراک‌گذاری
+                    </button>
+                </div>
+
+                ${isPdf ? `
+                <div class="pdf-viewer">
+                    <iframe src="${data.link}#toolbar=0" title="نمایش جزوه"></iframe>
+                </div>
+                ` : '<p style="color:#888; font-size:14px; margin-top:20px;">(پیش‌نمایش برای این فایل در دسترس نیست. لطفاً دانلود کنید.)</p>'}
+            `;
+
+        } catch (err) {
+            document.getElementById('card-content').innerHTML = `<p style="color:red;">خطا در دریافت اطلاعات.</p>`;
+        }
+    }
+
+    function shareLink() {
+        if (navigator.share) {
+            navigator.share({
+                title: document.querySelector('h1').innerText,
+                url: window.location.href
+            }).catch(console.error);
+        } else {
+            alert('لینک صفحه کپی شد!');
+            navigator.clipboard.writeText(window.location.href);
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadJozve);
+</script>
+</body>
+</html>
