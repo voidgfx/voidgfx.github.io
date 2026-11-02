@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>آکادمی دانش | صفحه اصلی</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root { 
+            --bg-color: #fcfaf5; 
+            --gold-primary: #c5a059; 
+            --gold-dark: #9e7f3d; 
+            --leaf-green: #2e5c3e; 
+            --text-main: #2c2c2c; 
+            --text-muted: #6b6b6b; 
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { 
+            font-family: 'Vazirmatn', sans-serif; 
+            background: linear-gradient(135deg, #ffffff 0%, #f4efdf 100%);
+            background-attachment: fixed;
+            color: var(--text-main); 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        
+        /* هدر سایت */
+        header { 
+            background: rgba(255, 255, 255, 0.8); 
+            backdrop-filter: blur(15px); 
+            padding: 15px 5%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            border-bottom: 1px solid rgba(197, 160, 89, 0.2);
+        }
+        .logo { font-size: 22px; font-weight: 900; color: var(--leaf-green); display: flex; align-items: center; gap: 10px; }
+        .logo i { color: var(--gold-primary); text-shadow: 0 0 10px rgba(197, 160, 89, 0.5); }
+        nav ul { display: flex; list-style: none; gap: 30px; }
+        nav a { text-decoration: none; color: var(--text-main); font-weight: 700; transition: 0.3s; position: relative;}
+        nav a::after { content: ''; position: absolute; width: 0; height: 2px; bottom: -5px; right: 0; background: var(--gold-primary); transition: 0.3s; }
+        nav a:hover::after { width: 100%; }
+        nav a:hover { color: var(--gold-primary); }
+
+        /* بخش خوش آمدگویی */
+        .hero { text-align: center; padding: 100px 20px; background: radial-gradient(circle at center, rgba(197, 160, 89, 0.1) 0%, transparent 60%); margin-bottom: 40px; }
+        .hero h1 { font-size: 42px; color: var(--leaf-green); margin-bottom: 20px; font-weight: 900; letter-spacing: -1px; }
+        .hero p { font-size: 18px; color: var(--text-muted); max-width: 600px; margin: 0 auto 40px auto; line-height: 1.8; }
+        .btn-hero { background: linear-gradient(135deg, var(--gold-primary) 0%, var(--gold-dark) 100%); color: #fff; padding: 16px 45px; border-radius: 50px; text-decoration: none; font-size: 18px; font-weight: 900; box-shadow: 0 10px 25px rgba(197, 160, 89, 0.4); transition: 0.3s; display: inline-flex; align-items: center; gap: 10px; }
+        .btn-hero:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(197, 160, 89, 0.6); }
+
+        /* لیست جزوات */
+        .container { width: 100%; max-width: 900px; margin: 0 auto; padding: 0 20px 80px 20px; }
+        .section-title { font-size: 26px; font-weight: 900; color: var(--leaf-green); margin-bottom: 30px; display: flex; align-items: center; gap: 15px; }
+        .section-title::after { content: ''; flex: 1; height: 1px; background: linear-gradient(to left, var(--gold-primary), transparent); }
+        
+        .download-box { 
+            background: rgba(255, 255, 255, 0.9); 
+            backdrop-filter: blur(10px); 
+            border-radius: 16px; padding: 25px 30px; margin-bottom: 20px; 
+            border: 1px solid rgba(197, 160, 89, 0.3); 
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.03); transition: all 0.4s ease; position: relative; overflow: hidden; 
+        }
+        .download-box:hover { transform: translateY(-5px) scale(1.01); border-color: var(--gold-primary); box-shadow: 0 12px 35px rgba(197, 160, 89, 0.15); }
+        .download-box::before { content: ''; position: absolute; top: 0; right: 0; bottom: 0; width: 6px; background: linear-gradient(to bottom, var(--gold-primary), var(--leaf-green)); }
+        
+        .dl-info h3 { font-size: 20px; color: var(--leaf-green); margin-bottom: 12px; font-weight: 900; }
+        .dl-tags span { font-size: 12px; padding: 6px 16px; border-radius: 25px; margin-left: 8px; font-weight: bold; display: inline-block; }
+        .tag-green { background: #e8f5e9; color: var(--leaf-green); border: 1px solid #c8e6c9; }
+        .tag-orange { background: #fff3e0; color: #e65100; border: 1px solid #ffe0b2; }
+        
+        .btn-view { background: transparent; color: var(--gold-dark); padding: 12px 25px; border-radius: 12px; text-decoration: none; font-size: 15px; font-weight: 900; border: 2px solid var(--gold-primary); transition: all 0.3s; display: inline-flex; align-items: center; gap: 10px; }
+        .btn-view:hover { background: var(--gold-primary); color: #fff; box-shadow: 0 6px 15px rgba(197, 160, 89, 0.4); }
+        
+        .loading, .empty-state { text-align: center; color: var(--text-muted); padding: 60px; font-size: 18px; background: #fff; border-radius: 16px; border: 1px dashed var(--gold-primary); }
+
+        /* فوتر */
+        footer { background: #1a1a1a; color: #fff; text-align: center; padding: 40px 20px; margin-top: auto; border-top: 4px solid var(--gold-primary); }
+        footer p { opacity: 0.7; font-size: 15px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo"><i class="fa-solid fa-graduation-cap"></i> آکادمی دانش</div>
+        <nav>
+            <ul>
+                <li><a href="index.html">صفحه اصلی</a></li>
+                <li><a href="#">درباره ما</a></li>
+                <li><a href="#">تماس با ما</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="hero">
+        <h1>به آکادمی دانش خوش آمدید</h1>
+        <p>بهترین و کامل‌ترین جزوات آموزشی دروس مختلف را با بالاترین کیفیت و به صورت رایگان دانلود کنید.</p>
+        <a href="#jozvat" class="btn-hero">مشاهده جزوات <i class="fa-solid fa-arrow-down"></i></a>
+    </div>
+
+    <div class="container" id="jozvat">
+        <div class="section-title"><i class="fa-solid fa-book-open"></i> جدیدترین جزوات</div>
+        <div id="jozve-list"><div class="loading"><i class="fa-solid fa-spinner fa-spin"></i> در حال دریافت اطلاعات...</div></div>
+    </div>
+
+    <footer>
+        <p>تمامی حقوق برای آکادمی دانش محفوظ است. © ۱۴۰۵</p>
+    </footer>
+
+<script>
+    const supabaseUrl = 'https://quvmycjmphfufodygrfe.supabase.co'; 
+    const supabaseKey = 'sb_publishable_yJMUW7s7PGzq1bILJwFbKw_HM0FE57D'; 
+    const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+    async function fetchJozveList() {
+        const container = document.getElementById('jozve-list');
+        try {
+            const { data, error } = await supabaseClient.from('jozve_list').select('*').order('created_at', { ascending: false });
+            if (error) throw error;
+            container.innerHTML = '';
+            if (data.length === 0) {
+                container.innerHTML = '<div class="empty-state">هنوز جزوه‌ای ثبت نشده است.</div>';
+                return;
+            }
+            data.forEach(item => {
+                const box = document.createElement('div');
+                box.className = 'download-box';
+                box.innerHTML = `
+                    <div class="dl-info">
+                        <h3>${item.title}</h3>
+                        <div class="dl-tags">
+                            <span class="tag-green">${item.author || 'نامشخص'}</span>
+                            <span class="tag-orange">${item.type || 'جزوه'}</span>
+                        </div>
+                    </div>
+                    <a href="view.html?id=${item.id}" class="btn-view">
+                        مشاهده جزوه <i class="fa-solid fa-arrow-left"></i>
+                    </a>
+                `;
+                container.appendChild(box);
+            });
+        } catch (err) {
+            container.innerHTML = `<div class="empty-state" style="color: #d32f2f;"><i class="fa-solid fa-triangle-exclamation"></i> خطا در اتصال! VPN را روشن کنید.</div>`;
+        }
+    }
+    document.addEventListener('DOMContentLoaded', fetchJozveList);
+</script>
+</body>
+</html>
