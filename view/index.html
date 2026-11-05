@@ -8,51 +8,81 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root { --gold-primary: #c5a059; --leaf-green: #2e5c3e; --text-main: #2c2c2c; }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Vazirmatn', sans-serif; background: linear-gradient(135deg, #ffffff 0%, #f4efdf 100%); color: var(--text-main); display: flex; flex-direction: column; min-height: 100vh; }
+        /* =====================================
+           استایل‌های کادرهای تزئینی (طراحی خودت)
+        ===================================== */
+        :root { --gold: #c49a50; --gold-light: #e8cf94; --navy: #172b4d; --wine: #803b4a; --cream: #fff7e5; --brown: #76552f; }
         
-        header { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 10; }
-        .logo { font-size: 22px; font-weight: 900; color: var(--leaf-green); display: flex; align-items: center; gap: 10px; }
-        .logo i { color: var(--gold-primary); }
-        .back-link { text-decoration: none; color: var(--gold-primary); font-weight: 900; display: flex; align-items: center; gap: 8px; transition: 0.3s; background: #fff; padding: 8px 20px; border-radius: 50px; border: 1px solid var(--gold-primary); }
-        .back-link:hover { background: var(--gold-primary); color: #fff; }
+        body { font-family: 'Vazirmatn', sans-serif; background: #f4f4f4; padding: 20px; line-height: 2.2; color: #333; display: flex; flex-direction: column; min-height: 100vh; }
+        .container { max-width: 800px; margin: 0 auto; width: 100%; flex: 1; }
 
-        .container { flex: 1; padding: 50px 20px; display: flex; flex-direction: column; align-items: center; }
-        .view-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(15px); padding: 40px; border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.05); text-align: center; max-width: 950px; width: 100%; border: 1px solid rgba(197, 160, 89, 0.3); }
-        
-        .view-card h1 { color: var(--leaf-green); font-size: 32px; margin-bottom: 10px; font-weight: 900; }
-        .meta { color: #888; font-size: 15px; margin-bottom: 30px; display: flex; justify-content: center; gap: 20px; }
-        
-        .action-buttons { display: flex; justify-content: center; gap: 15px; margin-bottom: 40px; flex-wrap: wrap; }
-        .btn-download { background: linear-gradient(135deg, var(--gold-primary) 0%, #9e7f3d 100%); color: #fff; padding: 15px 35px; border-radius: 12px; text-decoration: none; font-size: 16px; font-weight: 900; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 8px 20px rgba(197, 160, 89, 0.3); transition: 0.3s; }
-        .btn-download:hover { transform: translateY(-3px); box-shadow: 0 12px 25px rgba(197, 160, 89, 0.5); }
-        
-        .btn-share { background: #fff; color: var(--leaf-green); padding: 15px 35px; border-radius: 12px; text-decoration: none; font-size: 16px; font-weight: 900; border: 2px solid var(--leaf-green); display: inline-flex; align-items: center; gap: 10px; transition: 0.3s; cursor: pointer;}
-        .btn-share:hover { background: var(--leaf-green); color: #fff; }
+        .trad-box { position: relative; padding: 24px; margin: 22px 0; border-radius: 12px; overflow: hidden; transition: .3s ease; }
+        .trad-box:hover { transform: translateY(-3px); }
 
-        .pdf-viewer { width: 100%; height: 700px; border: 2px dashed rgba(197, 160, 89, 0.5); border-radius: 12px; background: #fafafa; margin-top: 20px; overflow: hidden; position: relative;}
-        .pdf-viewer iframe { width: 100%; height: 100%; border: none; }
+        .royal-box { color: #fff; background: linear-gradient(135deg,#172b4d,#263d65); border: 2px solid var(--gold); outline: 1px solid #c49a50; outline-offset: 4px; box-shadow: 0 8px 25px #172b4d25; }
+        .royal-box::before, .royal-box::after { content: "❧"; position: absolute; color: var(--gold-light); font-size: 32px; }
+        .royal-box::before { top: 5px; right: 12px; } .royal-box::after { bottom: 5px; left: 12px; }
+
+        .parchment-box { color: #60482b; background: linear-gradient(135deg,#fff9e9,#f0dfbd); border: 2px solid #b18a4c; box-shadow: inset 0 0 20px #b18a4c25, 0 5px 18px #00000012; }
+        .parchment-box::before { content: "❧  ✦  ❧"; display: block; text-align: center; color: #a77b43; font-size: 23px; margin-bottom: 8px; }
+
+        .wine-box { background: linear-gradient(145deg,#843b4a,#612a3a); color: #fff3dc; border: 3px double #e0b86e; border-radius: 18px; box-shadow: 0 7px 20px #6d26352b; }
+        .wine-box::before { content: "✧ ❀ ✧"; display: block; color: #f0d18e; text-align: center; font-size: 23px; }
+
+        .definition-box { background: #edf3e7; color: #38543a; border: 2px solid #82966a; border-right: 6px solid #607b4c; border-radius: 10px 18px 18px 10px; }
+        .definition-box::before { content: "۞ تعریف ۞"; display: block; font-weight: bold; color: #4e7042; margin-bottom: 8px; }
+
+        .tip-box { background: #fff5d9; color: #70501d; border: 2px solid #d2ad62; border-radius: 14px; }
+        .tip-box::before { content: "❀ نکته طلایی ❀"; display: block; color: #a07830; font-weight: bold; margin-bottom: 8px; }
+
+        .warning-box { background: #fae9e8; color: #753c40; border: 2px solid #c47a7a; border-right: 6px solid #a64d56; border-radius: 12px; }
+        .warning-box::before { content: "✧ توجه مهم ✧"; display: block; font-weight: bold; color: #a33f4c; margin-bottom: 8px; }
+
+        .example-box { background: #f5eddf; color: #654b2c; border: 2px dashed #b58b52; border-radius: 8px; }
+        .example-box::before { content: "❦ مثال آموزشی ❦"; display: block; font-weight: bold; color: #91652e; margin-bottom: 8px; }
+
+        .formula-box { background: #f1eafa; color: #634486; border: 2px solid #a68ac3; border-radius: 16px; text-align: center; font-size: 20px; }
+
+        .result-box { background: #eaf2e5; color: #42623c; border: 2px solid #8da47b; border-radius: 14px; box-shadow: inset 0 0 15px #7d9c6620; }
+        .result-box::before { content: "❧ نتیجه‌گیری ❧"; display: block; font-weight: bold; color: #537347; margin-bottom: 8px; }
+
+        .quote-box { background: #f8f0e1; color: #735b3b; border: 1px solid #c6a36c; border-right: 5px solid #b28a4d; border-radius: 10px; font-style: italic; }
+
+        .question-box { background: #eaf0f8; color: #304c70; border: 2px solid #829bbd; border-radius: 14px; }
+        .question-box::before { content: "✦ پرسش ✦"; display: block; color: #3d618d; font-weight: bold; margin-bottom: 8px; }
+
+        .answer-box { background: #e9f4e9; color: #365c3c; border: 2px solid #86a889; border-radius: 14px; }
+        .answer-box::before { content: "✧ پاسخ ✧"; display: block; color: #47734e; font-weight: bold; margin-bottom: 8px; }
+
+        .chapter-box { background: linear-gradient(135deg,#193653,#294e69); color: #fff3d3; text-align: center; border: 3px double #d6b66d; border-radius: 5px; padding: 30px 18px; box-shadow: 0 6px 20px #142d4530; }
+        .chapter-box::before, .chapter-box::after { content: "❧ ✦ ❧"; display: block; color: #e5c67d; font-size: 22px; }
+
+        .chapter-tag { display: inline-block; padding: 5px 20px; color: #fff0c8; background: #243b5d; border: 1px solid #c49a50; border-radius: 30px; font-size: 14px; }
         
-        footer { background: #1a1a1a; color: #fff; text-align: center; padding: 30px; border-top: 4px solid var(--gold-primary); }
+        /* استایل هدر و دکمه بازگشت */
+        .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid var(--gold); padding-bottom: 15px; }
+        .logo-text { font-size: 20px; font-weight: 900; color: var(--navy); display: flex; align-items: center; gap: 8px; }
+        .logo-text i { color: var(--gold); }
+        .btn-back { text-decoration: none; background: var(--navy); color: #fff; padding: 8px 20px; border-radius: 50px; font-size: 14px; transition: 0.3s; display: flex; align-items: center; gap: 5px;}
+        .btn-back:hover { background: var(--wine); }
+
+        @media (max-width: 600px) { .trad-box { padding: 18px; margin: 17px 0; font-size: 14px; } .formula-box { font-size: 17px; } }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo"><i class="fa-solid fa-graduation-cap"></i> آکادمی دانش</div>
-        <a href="index.html" class="back-link"><i class="fa-solid fa-arrow-right"></i> بازگشت به لیست</a>
-    </header>
-
     <div class="container">
-        <div class="view-card" id="card-content">
-            <p>در حال دریافت اطلاعات جزوه...</p>
+        <!-- هدر صفحه -->
+        <div class="header-bar">
+            <div class="logo-text"><i class="fa-solid fa-graduation-cap"></i> آکادمی دانش</div>
+            <a href="index.html" class="btn-back"><i class="fa-solid fa-arrow-right"></i> بازگشت به لیست</a>
+        </div>
+
+        <!-- محتوای جزوه (داینامیک) -->
+        <div id="content-area">
+            <p style="text-align:center;">در حال دریافت اطلاعات جزوه...</p>
         </div>
     </div>
-
-    <footer>
-        <p>تمامی حقوق برای آکادمی دانش محفوظ است. © ۱۴۰۵</p>
-    </footer>
 
 <script>
     const supabaseUrl = 'https://quvmycjmphfufodygrfe.supabase.co'; 
@@ -63,58 +93,54 @@
         const urlParams = new URLSearchParams(window.location.search);
         const jozveId = urlParams.get('id');
 
-        if (!jozveId) {
-            document.getElementById('card-content').innerHTML = '<p>خطا: جزوه‌ای انتخاب نشده است.</p>';
-            return;
+        if (!jozveId) { 
+            document.getElementById('content-area').innerHTML = '<p style="text-align:center; color:red;">خطا: جزوه‌ای انتخاب نشده است.</p>'; 
+            return; 
         }
 
         try {
+            // دریافت اطلاعات از جدول jozve_list
             const { data, error } = await supabaseClient.from('jozve_list').select('*').eq('id', jozveId).single();
             if (error) throw error;
 
-            // بررسی اینکه آیا لینک به PDF ختم میشه یا نه
-            const isPdf = data.link.toLowerCase().includes('.pdf');
+            // شروع ساخت HTML
+            let html = `<div class="chapter-box trad-box">${data.title}</div>`;
+            
+            // اگر نوع (type) وجود داشت، نمایش بده
+            if(data.type) {
+                html += `<div style="text-align: center; margin-bottom: 20px;"><span class="chapter-tag">${data.type}</span></div>`;
+            }
 
-            document.getElementById('card-content').innerHTML = `
-                <h1>${data.title}</h1>
-                <div class="meta">
-                    <span><i class="fa-solid fa-user-pen"></i> ${data.author || 'نامشخص'}</span>
-                    <span><i class="fa-solid fa-tag"></i> ${data.type || 'جزوه'}</span>
-                </div>
-                
-                <div class="action-buttons">
-                    <a href="${data.link}" target="_blank" class="btn-download">
-                        <i class="fa-solid fa-download"></i> دانلود فایل
-                    </a>
-                    <button onclick="shareLink()" class="btn-share">
-                        <i class="fa-solid fa-share-nodes"></i> اشتراک‌گذاری
-                    </button>
-                </div>
+            // بررسی تک تک فیلدها: اگر متنی توش نوشته شده بود، کادرش رو نشون بده
+            if(data.text) html += `<div class="parchment-box trad-box">${data.text.replace(/\n/g, '<br>')}</div>`;
+            if(data.definition) html += `<div class="definition-box trad-box">${data.definition.replace(/\n/g, '<br>')}</div>`;
+            if(data.note) html += `<div class="tip-box trad-box"><strong>نکته:</strong> ${data.note.replace(/\n/g, '<br>')}</div>`;
+            if(data.example) html += `<div class="example-box trad-box"><strong>مثال:</strong> ${data.example.replace(/\n/g, '<br>')}</div>`;
+            if(data.formula) html += `<div class="formula-box trad-box" dir="ltr">${data.formula}</div>`;
+            if(data.warning) html += `<div class="warning-box trad-box"><strong>هشدار:</strong> ${data.warning.replace(/\n/g, '<br>')}</div>`;
+            if(data.result) html += `<div class="result-box trad-box"><strong>نتیجه:</strong> ${data.result.replace(/\n/g, '<br>')}</div>`;
+            if(data.quote) html += `<div class="quote-box trad-box">${data.quote.replace(/\n/g, '<br>')}</div>`;
+            if(data.question) html += `<div class="question-box trad-box">${data.question.replace(/\n/g, '<br>')}</div>`;
+            if(data.answer) html += `<div class="answer-box trad-box">${data.answer.replace(/\n/g, '<br>')}</div>`;
 
-                ${isPdf ? `
-                <div class="pdf-viewer">
-                    <iframe src="${data.link}#toolbar=0" title="نمایش جزوه"></iframe>
-                </div>
-                ` : '<p style="color:#888; font-size:14px; margin-top:20px;">(پیش‌نمایش برای این فایل در دسترس نیست. لطفاً دانلود کنید.)</p>'}
-            `;
+            // دکمه دانلود فایل ضمیمه (اگر لینکی وارد شده بود)
+            if(data.link) {
+                html += `<div style="text-align: center; margin-top: 30px;">
+                            <a href="${data.link}" target="_blank" style="background: var(--wine); color: #fff; padding: 15px 40px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 16px; display: inline-block; border: 2px solid var(--gold); box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: 0.3s;">
+                                <i class="fa-solid fa-download"></i> دانلود فایل PDF
+                            </a>
+                         </div>`;
+            }
+
+            // تزریق به صفحه
+            document.getElementById('content-area').innerHTML = html;
 
         } catch (err) {
-            document.getElementById('card-content').innerHTML = `<p style="color:red;">خطا در دریافت اطلاعات.</p>`;
+            console.error(err);
+            document.getElementById('content-area').innerHTML = `<p style="color:red; text-align:center;">خطا در دریافت اطلاعات. لطفا VPN را بررسی کنید یا جزوه وجود ندارد.</p>`;
         }
     }
-
-    function shareLink() {
-        if (navigator.share) {
-            navigator.share({
-                title: document.querySelector('h1').innerText,
-                url: window.location.href
-            }).catch(console.error);
-        } else {
-            alert('لینک صفحه کپی شد!');
-            navigator.clipboard.writeText(window.location.href);
-        }
-    }
-
+    
     document.addEventListener('DOMContentLoaded', loadJozve);
 </script>
 </body>
