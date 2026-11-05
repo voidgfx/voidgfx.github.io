@@ -3,55 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مشاهده جزوه | آکادمی دانش</title>
+    <title>مشاهده سوالات | آکادمی دانش</title>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root { --gold: #c49a50; --gold-light: #e8cf94; --navy: #172b4d; --wine: #803b4a; --cream: #fff7e5; --brown: #76552f; }
+        :root { 
+            --gold: #c49a50; --gold-light: #e8cf94; --navy: #172b4d; 
+            --wine: #803b4a; --cream: #fff7e5; --brown: #76552f; 
+            --bg-color: #f9f6f0;
+        }
         
-        body { font-family: 'Vazirmatn', sans-serif; background: #f4f4f4; padding: 20px; line-height: 2.2; color: #333; display: flex; flex-direction: column; min-height: 100vh; }
-        .container { max-width: 800px; margin: 0 auto; width: 100%; flex: 1; }
+        body { font-family: 'Vazirmatn', sans-serif; background-color: var(--bg-color); padding: 20px; line-height: 2; color: #333; display: flex; flex-direction: column; min-height: 100vh; }
+        .container { max-width: 850px; margin: 0 auto; width: 100%; flex: 1; }
 
-        /* هدر صفحه */
+        /* هدر سایت */
         .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid var(--gold); padding-bottom: 15px; }
         .logo-text { font-size: 20px; font-weight: 900; color: var(--navy); display: flex; align-items: center; gap: 8px; }
         .logo-text i { color: var(--gold); }
         .btn-back { text-decoration: none; background: var(--navy); color: #fff; padding: 8px 20px; border-radius: 50px; font-size: 14px; transition: 0.3s; display: flex; align-items: center; gap: 5px;}
         .btn-back:hover { background: var(--wine); }
 
-        /* سرفصل اصلی (فقط این کادر داره) */
-        .chapter-box { background: linear-gradient(135deg,#193653,#294e69); color: #fff3d3; text-align: center; border: 3px double #d6b66d; border-radius: 10px; padding: 30px 18px; box-shadow: 0 6px 20px #142d4530; margin-bottom: 30px; }
+        /* سرفصل اصلی (کادر آبی سنتی) */
+        .chapter-box { 
+            background: linear-gradient(135deg,#193653,#294e69); color: #fff3d3; 
+            text-align: center; border: 3px double #d6b66d; border-radius: 12px; 
+            padding: 30px 18px; box-shadow: 0 8px 25px #142d4530; margin-bottom: 40px; 
+        }
+        .chapter-box h1 { font-size: 28px; margin: 0; font-weight: 900; text-shadow: 1px 1px 2px #000; }
         .chapter-box::before, .chapter-box::after { content: "❧ ✦ ❧"; display: block; color: #e5c67d; font-size: 22px; margin: 10px 0;}
-        .chapter-box h1 { font-size: 28px; margin: 0; font-weight: 900; }
 
-        /* برچسب نوع جزوه */
-        .chapter-tag { display: inline-block; padding: 5px 20px; color: #fff0c8; background: #243b5d; border: 1px solid #c49a50; border-radius: 30px; font-size: 14px; margin-bottom: 30px; }
+        /* استایل سوالات (شبیه همیار) */
+        .question-item {
+            margin-bottom: 35px;
+            padding-bottom: 20px;
+            border-bottom: 1px dashed #d5b66f;
+        }
         
-        /* عنوان سرفصل‌های داخلی */
-        .section-title { 
-            font-size: 22px; font-weight: 900; color: var(--wine); 
-            margin: 40px 0 15px 0; padding-bottom: 8px;
-            border-bottom: 2px dashed #d5b66f;
-            display: flex; align-items: center; gap: 10px;
+        .question-text {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--navy);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
         }
-        .section-title i { color: var(--gold); font-size: 20px; }
-
-        /* محتوای متنی (بدون کادر، تمیز) */
-        .content-text { 
-            font-size: 16px; line-height: 2.2; color: #444; text-align: justify;
-            padding: 0 10px;
+        
+        .question-number {
+            background: var(--navy);
+            color: var(--gold-light);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+            margin-top: 5px;
         }
 
-        /* جداکننده زیبا بین بخش‌ها */
-        .divider { display: flex; align-items: center; gap: 15px; margin: 35px 0; color: #bd984e; font-size: 22px; text-align: center; }
-        .divider::before, .divider::after { content: ""; flex: 1; height: 2px; background: linear-gradient(to left, transparent, #c9a451, transparent); }
+        .answer-text {
+            font-size: 16px;
+            color: #444;
+            background: #e9f4e9; /* پس زمینه سبز ملایم برای جواب */
+            padding: 15px 20px;
+            border-radius: 10px;
+            border-right: 5px solid #47734e;
+            margin-right: 40px; /* فاصله از سمت راست */
+            position: relative;
+        }
 
-        /* دکمه دانلود فایل */
-        .btn-download { background: var(--wine); color: #fff; padding: 15px 40px; border-radius: 12px; text-decoration: none; font-weight: bold; font-size: 16px; display: inline-block; border: 2px solid var(--gold); box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition: 0.3s; }
-        .btn-download:hover { background: #5c2833; transform: translateY(-3px); }
+        .answer-text::before {
+            content: "پاسخ:";
+            font-weight: 900;
+            color: #47734e;
+            margin-left: 8px;
+        }
 
-        @media (max-width: 600px) { .section-title { font-size: 18px; } .chapter-box h1 { font-size: 22px; } .content-text { font-size: 14px; } }
+        /* موبایل */
+        @media (max-width: 600px) { 
+            .chapter-box h1 { font-size: 22px; } 
+            .question-text { font-size: 16px; }
+            .answer-text { margin-right: 0; font-size: 14px; }
+        }
     </style>
 </head>
 <body>
@@ -62,7 +98,7 @@
             <a href="index.html" class="btn-back"><i class="fa-solid fa-arrow-right"></i> بازگشت به لیست</a>
         </div>
         <div id="content-area">
-            <p style="text-align:center;">در حال دریافت اطلاعات جزوه...</p>
+            <p style="text-align:center;">در حال دریافت اطلاعات...</p>
         </div>
     </div>
 
@@ -81,48 +117,35 @@
             if (error) throw error;
 
             let html = `<div class="chapter-box"><h1>${data.title}</h1></div>`;
-            if(data.type) html += `<div style="text-align: center;"><span class="chapter-tag">${data.type}</span></div>`;
 
-            // تابعی برای ساخت سکشن (اگر متن خالی بود، ساخته نشه)
-            const buildSection = (title, icon, content, dir='rtl') => {
-                if(!content || content.trim() === '') return '';
-                return `
-                    <div class="section-title"><i class="fa-solid ${icon}"></i> ${title}</div>
-                    <div class="content-text" dir="${dir}">${content.replace(/\n/g, '<br>')}</div>
-                `;
-            };
+            // گرفتن سوال و جواب‌ها از فیلدهای دیتابیس
+            // فرض میکنیم متن سوال و جواب با خط جدید (Enter) از هم جدا شدن
+            const questions = (data.text || '').split('\n').filter(q => q.trim() !== '');
+            const answers = (data.answer || '').split('\n').filter(a => a.trim() !== '');
 
-            // استفاده از تابع برای همه بخش‌ها
-            if(data.text) html += `<div class="content-text" style="margin-bottom:20px;">${data.text.replace(/\n/g, '<br>')}</div><div class="divider">❧ ✦ ❧</div>`;
-            
-            html += buildSection('تعریف', 'fa-book', data.definition);
-            html += buildSection('نکته مهم', 'fa-lightbulb', data.note);
-            html += buildSection('مثال آموزشی', 'fa-pen-nib', data.example);
-            
-            if(data.formula) {
-                html += `<div class="section-title"><i class="fa-solid fa-square-root-variable"></i> فرمول</div>
-                         <div class="content-text" dir="ltr" style="text-align:center; font-size:22px; color:var(--navy); font-weight:bold;">${data.formula}</div>`;
-            }
-            
-            html += buildSection('هشدار', 'fa-triangle-exclamation', data.warning);
-            html += buildSection('نتیجه‌گیری', 'fa-check-double', data.result);
-            html += buildSection('نقل قول', 'fa-quote-right', data.quote);
-            
-            if(data.question || data.answer) {
-                html += `<div class="divider">✦ ❀ ✦</div>`;
-                html += buildSection('پرسش', 'fa-circle-question', data.question);
-                html += buildSection('پاسخ', 'fa-circle-check', data.answer);
-            }
-
-            if(data.link) {
-                html += `<div style="text-align: center; margin-top: 40px;">
-                            <a href="${data.link}" target="_blank" class="btn-download"><i class="fa-solid fa-download"></i> دانلود فایل PDF</a>
-                         </div>`;
+            if (questions.length > 0) {
+                questions.forEach((q, index) => {
+                    const a = answers[index] || 'پاسخی ثبت نشده است.'; // اگر جواب نبود
+                    html += `
+                        <div class="question-item">
+                            <div class="question-text">
+                                <span class="question-number">${index + 1}</span>
+                                <span>${q}</span>
+                            </div>
+                            <div class="answer-text">
+                                ${a}
+                            </div>
+                        </div>
+                    `;
+                });
+            } else {
+                html += `<p style="text-align:center; color:#666;">متنی برای نمایش وجود ندارد.</p>`;
             }
 
             document.getElementById('content-area').innerHTML = html;
 
         } catch (err) {
+            console.error(err);
             document.getElementById('content-area').innerHTML = `<p style="color:red; text-align:center;">خطا در دریافت اطلاعات.</p>`;
         }
     }
