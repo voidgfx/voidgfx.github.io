@@ -1,105 +1,90 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="fa-IR" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>مشاهده سوالات | آکادمی دانش</title>
+    <title>مشاهده جزوه | آکادمی دانش</title>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root { 
-            --gold: #c49a50; --gold-light: #e8cf94; --navy: #172b4d; 
-            --wine: #803b4a; --cream: #fff7e5; --brown: #76552f; 
-            --bg-color: #f9f6f0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', Tahoma, sans-serif; }
+        body { background-color: #f5f5f5; color: #333; line-height: 1.8; }
         
-        body { font-family: 'Vazirmatn', sans-serif; background-color: var(--bg-color); padding: 20px; line-height: 2; color: #333; display: flex; flex-direction: column; min-height: 100vh; }
-        .container { max-width: 850px; margin: 0 auto; width: 100%; flex: 1; }
-
-        /* هدر سایت */
-        .header-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 2px solid var(--gold); padding-bottom: 15px; }
-        .logo-text { font-size: 20px; font-weight: 900; color: var(--navy); display: flex; align-items: center; gap: 8px; }
-        .logo-text i { color: var(--gold); }
-        .btn-back { text-decoration: none; background: var(--navy); color: #fff; padding: 8px 20px; border-radius: 50px; font-size: 14px; transition: 0.3s; display: flex; align-items: center; gap: 5px;}
-        .btn-back:hover { background: var(--wine); }
-
-        /* سرفصل اصلی (کادر آبی سنتی) */
-        .chapter-box { 
-            background: linear-gradient(135deg,#193653,#294e69); color: #fff3d3; 
-            text-align: center; border: 3px double #d6b66d; border-radius: 12px; 
-            padding: 30px 18px; box-shadow: 0 8px 25px #142d4530; margin-bottom: 40px; 
-        }
-        .chapter-box h1 { font-size: 28px; margin: 0; font-weight: 900; text-shadow: 1px 1px 2px #000; }
-        .chapter-box::before, .chapter-box::after { content: "❧ ✦ ❧"; display: block; color: #e5c67d; font-size: 22px; margin: 10px 0;}
-
-        /* استایل سوالات (شبیه همیار) */
-        .question-item {
-            margin-bottom: 35px;
-            padding-bottom: 20px;
-            border-bottom: 1px dashed #d5b66f;
-        }
+        .navbar { background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .logo { font-weight: 900; color: #1f57c8; font-size: 20px; text-decoration: none; display: flex; align-items: center; gap: 8px;}
+        .logo i { color: #ed028c; }
         
-        .question-text {
-            font-size: 18px;
-            font-weight: 900;
-            color: var(--navy);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: flex-start;
-            gap: 10px;
-        }
+        .main-container { max-width: 1100px; margin: 20px auto; display: flex; gap: 20px; padding: 0 15px; }
+
+        /* ستون سمت راست (مقاله) */
+        .content-area { flex: 1; background: #fff; padding: 25px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+        .post-title { font-size: 20px; font-weight: 900; color: #222; border-bottom: 2px solid #eee; padding-bottom: 15px; margin-bottom: 20px; }
+        .post-content p { margin-bottom: 15px; text-align: justify; }
+        .question-text { font-weight: 700; color: #222; margin-bottom: 5px; display: block; }
+        .answer-label { color: #d83131; font-weight: 700; }
+        .answer-text { color: #444; display: block; margin-bottom: 20px; }
+        .page-number { color: #ed028c; font-weight: 700; font-size: 17px; margin-top: 25px; margin-bottom: 15px; display: block; }
+        .extra-box { padding: 15px; border-radius: 5px; margin: 15px 0; color: #333; }
+
+        /* ستون سمت چپ (سایدبار) */
+        .sidebar { width: 300px; flex-shrink: 0; }
+        .widget { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .widget-title { font-size: 16px; font-weight: 900; border-bottom: 2px solid #eee; padding-bottom: 10px; margin-bottom: 15px; color: #222; }
         
-        .question-number {
-            background: var(--navy);
-            color: var(--gold-light);
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            flex-shrink: 0;
-            margin-top: 5px;
-        }
+        /* لیست جزوه ها در سایدبار */
+        .sidebar-jozve-item { display: block; text-decoration: none; color: #555; font-size: 14px; padding: 10px 0; border-bottom: 1px solid #eee; transition: 0.2s; }
+        .sidebar-jozve-item:hover { color: #1f57c8; padding-right: 5px; }
 
-        .answer-text {
-            font-size: 16px;
-            color: #444;
-            background: #e9f4e9; /* پس زمینه سبز ملایم برای جواب */
-            padding: 15px 20px;
-            border-radius: 10px;
-            border-right: 5px solid #47734e;
-            margin-right: 40px; /* فاصله از سمت راست */
-            position: relative;
-        }
+        /* تبلیغ متنی در سایدبار */
+        .ad-text-box { background: #fffde8; border: 1px dashed #f0c14b; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 20px; }
+        .ad-text-box a { color: #c91c57; font-weight: bold; text-decoration: none; font-size: 14px; }
 
-        .answer-text::before {
-            content: "پاسخ:";
-            font-weight: 900;
-            color: #47734e;
-            margin-left: 8px;
-        }
+        /* گالری تصاویر در سایدبار */
+        .sidebar-image-grid { display: flex; flex-direction: column; gap: 10px; }
+        .sidebar-image-grid img { width: 100%; height: auto; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: 0.3s; }
+        .sidebar-image-grid img:hover { transform: scale(1.02); }
 
-        /* موبایل */
-        @media (max-width: 600px) { 
-            .chapter-box h1 { font-size: 22px; } 
-            .question-text { font-size: 16px; }
-            .answer-text { margin-right: 0; font-size: 14px; }
+        @media (max-width: 768px) {
+            .main-container { flex-direction: column; }
+            .sidebar { width: 100%; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header-bar">
-            <div class="logo-text"><i class="fa-solid fa-graduation-cap"></i> آکادمی دانش</div>
-            <a href="index.html" class="btn-back"><i class="fa-solid fa-arrow-right"></i> بازگشت به لیست</a>
+    <nav class="navbar">
+        <a href="index.html" class="logo"><i class="fa-solid fa-graduation-cap"></i> آکادمی دانش</a>
+    </nav>
+
+    <div class="main-container">
+        
+        <!-- ستون راست: محتوای جزوه -->
+        <div class="content-area">
+            <h1 class="post-title" id="article-title">در حال دریافت...</h1>
+            <div class="post-content" id="article-content"><p>لطفا منتظر بمانید...</p></div>
         </div>
-        <div id="content-area">
-            <p style="text-align:center;">در حال دریافت اطلاعات...</p>
+
+        <!-- ستون چپ: سایدبار -->
+        <div class="sidebar">
+            <!-- 1. لیست جزوه ها -->
+            <div class="widget">
+                <div class="widget-title">جزوه‌های دیگر</div>
+                <div id="sidebar-jozve-list"><p style="font-size:12px;">در حال دریافت...</p></div>
+            </div>
+
+            <!-- 2. تبلیغ متنی -->
+            <div id="sidebar-text-ad"></div>
+
+            <!-- 3. گالری تصاویر -->
+            <div class="widget">
+                <div class="widget-title">تصاویر و بنرها</div>
+                <div class="sidebar-image-grid" id="sidebar-image-grid">
+                    <p style="font-size:12px;">در حال دریافت...</p>
+                </div>
+            </div>
         </div>
+
     </div>
 
 <script>
@@ -107,49 +92,93 @@
     const supabaseKey = 'sb_publishable_yJMUW7s7PGzq1bILJwFbKw_HM0FE57D'; 
     const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-    async function loadJozve() {
+    // 1. لود کردن محتوای اصلی جزوه
+    async function loadArticle() {
         const urlParams = new URLSearchParams(window.location.search);
         const jozveId = urlParams.get('id');
-        if (!jozveId) { document.getElementById('content-area').innerHTML = '<p style="text-align:center; color:red;">خطا!</p>'; return; }
+
+        if (!jozveId) {
+            document.getElementById('article-title').innerText = "خطا";
+            document.getElementById('article-content').innerHTML = "<p>شناسه جزوه پیدا نشد.</p>";
+            return;
+        }
 
         try {
-            const { data, error } = await supabaseClient.from('jozve_list').select('*').eq('id', jozveId).single();
+            const { data, error } = await supabaseClient.from('jozveha').select('*').eq('id', jozveId).single();
             if (error) throw error;
 
-            let html = `<div class="chapter-box"><h1>${data.title}</h1></div>`;
-
-            // گرفتن سوال و جواب‌ها از فیلدهای دیتابیس
-            // فرض میکنیم متن سوال و جواب با خط جدید (Enter) از هم جدا شدن
-            const questions = (data.text || '').split('\n').filter(q => q.trim() !== '');
-            const answers = (data.answer || '').split('\n').filter(a => a.trim() !== '');
-
-            if (questions.length > 0) {
-                questions.forEach((q, index) => {
-                    const a = answers[index] || 'پاسخی ثبت نشده است.'; // اگر جواب نبود
-                    html += `
-                        <div class="question-item">
-                            <div class="question-text">
-                                <span class="question-number">${index + 1}</span>
-                                <span>${q}</span>
-                            </div>
-                            <div class="answer-text">
-                                ${a}
-                            </div>
-                        </div>
-                    `;
-                });
-            } else {
-                html += `<p style="text-align:center; color:#666;">متنی برای نمایش وجود ندارد.</p>`;
-            }
-
-            document.getElementById('content-area').innerHTML = html;
+            document.getElementById('article-title').innerText = data.title;
+            let html = '';
+            if (data.text) html += `<p>${data.text.replace(/\n/g, '<br>')}</p>`;
+            if (data.type) html += `<span class="page-number">📃 ${data.type}</span>`;
+            if (data.definition) html += `<div class="extra-box" style="background:#edf3e7; border-right:4px solid #607b4c;"><strong>تعریف:</strong> ${data.definition.replace(/\n/g, '<br>')}</div>`;
+            if (data.note) html += `<div class="extra-box" style="background:#fff5d9; border-right:4px solid #d2ad62;"><strong>نکته:</strong> ${data.note.replace(/\n/g, '<br>')}</div>`;
+            if (data.formula) html += `<div class="extra-box" style="background:#f1eafa; border-right:4px solid #a68ac3; text-align:center; font-size:20px; direction:ltr;">${data.formula}</div>`;
+            if (data.question) html += `<span class="question-text">${data.question.replace(/\n/g, '<br>')}</span>`;
+            if (data.answer) html += `<span class="answer-label">پاسخ:</span><span class="answer-text">${data.answer.replace(/\n/g, '<br>')}</span>`;
+            if (data.link) html += `<div style="margin-top:20px; text-align:center;"><a href="${data.link}" target="_blank" style="background:#1f57c8; color:#fff; padding:10px 25px; border-radius:5px; text-decoration:none; font-weight:bold;">دانلود فایل PDF</a></div>`;
+            document.getElementById('article-content').innerHTML = html;
 
         } catch (err) {
-            console.error(err);
-            document.getElementById('content-area').innerHTML = `<p style="color:red; text-align:center;">خطا در دریافت اطلاعات.</p>`;
+            document.getElementById('article-content').innerHTML = "<p style='color:red;'>خطا در دریافت اطلاعات! لطفا VPN را روشن کنید.</p>";
         }
     }
-    document.addEventListener('DOMContentLoaded', loadJozve);
+
+    // 2. لود کردن داده‌های سایدبار (لیست جزوه‌ها، تبلیغات و تصاویر)
+    async function loadSidebar() {
+        // لیست جزوه‌ها
+        try {
+            const { data: jozves } = await supabaseClient.from('jozveha').select('*').order('created_at', { ascending: false });
+            const jList = document.getElementById('sidebar-jozve-list');
+            if (jozves && jozves.length > 0) {
+                jList.innerHTML = '';
+                jozves.forEach(item => {
+                    jList.innerHTML += `<a href="view.html?id=${item.id}" class="sidebar-jozve-item">${item.title}</a>`;
+                });
+            } else {
+                jList.innerHTML = '<p style="font-size:12px;">جزوه‌ای یافت نشد.</p>';
+            }
+        } catch (err) { console.error(err); }
+
+        // تبلیغات و تصاویر
+        try {
+            const { data: ads } = await supabaseClient.from('ads').select('*').order('created_at', { ascending: false });
+            const textAdContainer = document.getElementById('sidebar-text-ad');
+            const imageContainer = document.getElementById('sidebar-image-grid');
+            
+            textAdContainer.innerHTML = '';
+            imageContainer.innerHTML = '';
+            
+            let hasImage = false;
+
+            if (ads) {
+                ads.forEach(ad => {
+                    if (ad.type === 'text') {
+                        textAdContainer.innerHTML += `
+                            <div class="ad-text-box">
+                                <a href="${ad.link}" target="_blank">${ad.title} (کلیک کنید)</a>
+                            </div>
+                        `;
+                    } else if (ad.type === 'image') {
+                        imageContainer.innerHTML += `
+                            <a href="${ad.link || '#'}" target="_blank">
+                                <img src="${ad.image_url}" alt="${ad.title || 'بنر'}">
+                            </a>
+                        `;
+                        hasImage = true;
+                    }
+                });
+            }
+            
+            if (!hasImage) imageContainer.innerHTML = '<p style="font-size:12px;">تصویری ثبت نشده است.</p>';
+
+        } catch (err) { console.error(err); }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        loadArticle();
+        loadSidebar();
+    });
 </script>
 </body>
-</html>
+    </html>
