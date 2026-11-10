@@ -1,58 +1,308 @@
 <!DOCTYPE html>
-<html lang="fa-IR" dir="rtl">
+<html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>آکادمی دانش | صفحه اصلی</title>
+    <title>آکادمی دانش | سامانه جزوات</title>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Vazirmatn', Tahoma, sans-serif; }
-        body { background-color: #f5f5f5; color: #333; line-height: 1.8; }
-        .navbar { background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.1); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
-        .logo { font-weight: 900; color: #1f57c8; font-size: 20px; text-decoration: none; }
-        .logo i { color: #ed028c; }
-        .main-container { max-width: 900px; margin: 30px auto; padding: 0 15px; }
-        .section-title { font-size: 20px; font-weight: 900; margin-bottom: 20px; border-bottom: 2px solid #ddd; padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
-        .jozve-card { background: #fff; border-radius: 8px; padding: 20px; margin-bottom: 15px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; transition: 0.3s; }
-        .jozve-card:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .jozve-card h3 { font-size: 17px; color: #222; }
-        .btn-view { background: #1f57c8; color: #fff; text-decoration: none; padding: 10px 25px; border-radius: 5px; font-weight: bold; }
-        .btn-view:hover { background: #143d8a; }
-        @media (max-width: 600px) { .jozve-card { flex-direction: column; gap: 15px; text-align: center; } }
+        :root { 
+            --gold: #c9a451; --gold-dark: #997a00; --green: #28543b; 
+            --wine: #590b2c; --cream: #fffde8; --text: #2c2c2c; 
+            --orn-blue: #29265f;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Vazirmatn', sans-serif; background: #f4f4f4; color: var(--text); min-height: 100vh; display: flex; flex-direction: column; line-height: 1.8; }
+
+        .hidden { display: none !important; }
+        .fade-in { animation: fadeIn 0.3s ease forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        /* هدر */
+        header { background: #fff; padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; border-bottom: 2px solid var(--gold); }
+        .logo { font-size: 22px; font-weight: 900; color: var(--green); display: flex; align-items: center; gap: 10px; cursor: pointer;}
+        .logo i { color: var(--gold); }
+        nav ul { display: flex; list-style: none; gap: 25px; }
+        nav a { text-decoration: none; color: var(--text); font-weight: 700; cursor: pointer; transition: 0.3s;}
+        nav a:hover { color: var(--gold); }
+        .back-link { text-decoration: none; color: var(--gold-dark); font-weight: 900; display: flex; align-items: center; gap: 8px; transition: 0.3s; background: #fff; padding: 8px 20px; border-radius: 50px; border: 1px solid var(--gold); font-size: 14px; cursor: pointer;}
+        .back-link:hover { background: var(--gold); color: #fff; }
+
+        /* صفحه اصلی */
+        .hero-royal { text-align: center; padding: 60px 20px; margin: 30px auto; max-width: 900px; background: #fff; border: 2px double var(--gold); border-radius: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .hero-royal h1 { font-size: 36px; color: var(--green); margin-bottom: 15px; font-weight: 900; }
+        .hero-royal p { font-size: 18px; color: #555; max-width: 600px; margin: 0 auto 25px; }
+        .btn-neon { background: transparent; color: var(--gold-dark); padding: 12px 35px; border-radius: 50px; font-size: 16px; font-weight: 900; border: 2px solid var(--gold); transition: 0.3s; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
+        .btn-neon:hover { background: var(--gold); color: #fff; }
+        
+        .container { width: 100%; max-width: 900px; margin: 0 auto; padding: 0 20px 50px; }
+        .wine-ribbon { display: inline-block; padding: 12px 30px; margin-bottom: 25px; background: var(--wine); color: #f7dfa0; font-weight: 900; font-size: 20px; border: 2px solid var(--gold); border-radius: 10px 30px; }
+        
+        /* کارت‌های جزوه */
+        .card-3d { background: #fff; border: 1px solid var(--gold); border-radius: 12px; padding: 20px 25px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; box-shadow: 4px 4px 0px rgba(201, 164, 81, 0.3); transition: 0.2s; position: relative; overflow: hidden; }
+        .card-3d:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0px var(--gold); }
+        .card-3d::before { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 4px; background: var(--gold); }
+        .card-3d h3 { font-size: 18px; color: var(--green); margin-bottom: 8px; font-weight: 900; }
+        .card-3d .tag { background: #fdf5e6; color: var(--gold-dark); padding: 4px 12px; border-radius: 15px; font-size: 12px; font-weight: bold; border: 1px solid var(--gold); }
+        .btn-cream-double { background: var(--cream); color: var(--wine); padding: 8px 20px; border-radius: 8px; text-decoration: none; font-weight: 900; font-size: 14px; border: 2px double var(--gold); transition: 0.3s; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;}
+        .btn-cream-double:hover { background: var(--gold); color: #fff; }
+
+        /* =========================================
+           صفحه مشاهده (تزئینی و دقیق)
+        ========================================= */
+        .ornate-paper { background: var(--cream); border: 2px solid var(--gold); border-radius: 15px; padding: 30px 25px; margin-top: 30px; }
+        .ornate-title { text-align: center; padding: 15px 30px; margin: 20px auto; color: #fff; background: var(--orn-blue); border: 2px solid var(--gold); border-radius: 10px; font-size: 22px; font-weight: 900; }
+        .chapter-label { display: inline-block; padding: 8px 20px; margin: 15px 0; color: #fff2c9; background: var(--wine); border: 1px solid var(--gold); border-radius: 8px; font-weight: 900; font-size: 15px; }
+
+        /* لیست‌ها */
+        .vocab-list { list-style: none; padding: 0; margin: 15px 0; }
+        .vocab-list li { padding: 8px 10px; margin-bottom: 5px; font-size: 16px; font-weight: bold; border-bottom: 1px dashed rgba(201, 164, 81, 0.4); display: flex; align-items: center; gap: 10px;}
+        .vocab-word { color: var(--orn-blue); font-family: 'Tahoma', sans-serif; font-size: 18px; direction: ltr; }
+        .vocab-equal { color: var(--gold-dark); }
+        .vocab-meaning { color: var(--green); font-weight: 900; }
+        .article-wrapper ul.bullet-list { padding-right: 25px; margin-bottom: 15px; list-style-type: disc;}
+        .article-wrapper ul.bullet-list li { font-size: 16px; margin-bottom: 8px; color: #333; }
+
+        /* کادرها */
+        .note-box { background: #fffde7; border-right: 5px solid #fbc02d; padding: 15px 20px; margin: 20px 0; border-radius: 6px; color: #555; }
+        .q-box { background: #e3f2fd; border: 1px solid #90caf9; border-right: 5px solid #1565c0; padding: 15px 20px; margin: 20px 0 10px 0; border-radius: 6px; }
+        .a-box { background: #e8f5e9; border-right: 5px solid #2e7d32; padding: 15px 20px; margin: 0 0 20px 0; border-radius: 6px; color: #2e7d32; }
+        .warn-box { background: #fff3e0; border-right: 5px solid #ef6c00; padding: 15px 20px; margin: 20px 0; border-radius: 6px; color: #e65100; }
+        .article-wrapper h3 { font-size: 18px; color: var(--green); margin: 25px 0 15px 0; padding-right: 10px; border-right: 4px solid var(--gold); background: #fdfdfd; padding: 8px; border-radius: 4px;}
+
+        /* =========================================
+           استایل جدول‌ها (جدید)
+        ========================================= */
+        .table-wrapper { overflow-x: auto; margin: 25px 0; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        table.custom-table { width: 100%; border-collapse: collapse; background: #fff; min-width: 400px; }
+        table.custom-table th { background: var(--orn-blue); color: #fff; padding: 12px 15px; text-align: right; font-weight: 900; border: 1px solid var(--gold); }
+        table.custom-table td { padding: 12px 15px; border: 1px solid #ddd; color: #333; font-size: 15px; }
+        table.custom-table tr:nth-child(even) { background: #fdfbf7; }
+        table.custom-table tr:hover { background: #fff8e4; }
+
+        /* خط جداکننده (Divider) */
+        .divider { border: none; height: 2px; background: linear-gradient(to left, transparent, var(--gold), transparent); margin: 30px 0; }
+
+        .loading, .empty-state { text-align: center; padding: 30px; color: var(--wine); font-weight: bold; }
+        footer { background: #1a1a1a; color: #fff; text-align: center; padding: 20px; margin-top: auto; border-top: 4px solid var(--gold); font-size: 14px;}
+        
+        @media(max-width:600px) { 
+            .ornate-title { font-size: 18px; padding: 15px 20px; } 
+            .ornate-paper { padding: 20px 15px; } 
+            .hero-royal h1 { font-size: 28px; }
+            .card-3d { flex-direction: column; text-align: center; }
+            .card-3d::before { width: 100%; height: 4px; top: auto; bottom: 0; right: 0; }
+        }
     </style>
 </head>
 <body>
-    <nav class="navbar">
-        <a href="index.html" class="logo"><i class="fa-solid fa-graduation-cap"></i> آکادمی دانش</a>
-    </nav>
-    <div class="main-container">
-        <div class="section-title"><i class="fa-solid fa-book"></i> لیست جزوات</div>
-        <div id="jozve-list"><p style="text-align:center;">در حال دریافت...</p></div>
+
+    <header>
+        <div class="logo" onclick="showHome()"><i class="fa-solid fa-graduation-cap"></i> آکادمی دانش</div>
+        <nav id="main-nav">
+            <ul><li><a onclick="showHome()">صفحه اصلی</a></li><li><a href="#">درباره ما</a></li></ul>
+        </nav>
+        <a id="back-btn" class="back-link hidden" onclick="showHome()"><i class="fa-solid fa-arrow-right"></i> بازگشت به لیست</a>
+    </header>
+
+    <div id="home-view" class="fade-in">
+        <div class="hero-royal">
+            <h1>به آکادمی دانش خوش آمدید</h1>
+            <p>بهترین و کامل‌ترین جزوات آموزشی دروس مختلف را با بالاترین کیفیت دانلود کنید.</p>
+            <button onclick="scrollToJozvat()" class="btn-neon">مشاهده جزوات <i class="fa-solid fa-arrow-down"></i></button>
+        </div>
+        <div class="container" id="jozvat">
+            <div style="text-align: center;">
+                <div class="wine-ribbon"><i class="fa-solid fa-book-open"></i> جدیدترین جزوات</div>
+            </div>
+            <div id="jozve-list"><div class="loading"><i class="fa-solid fa-spinner fa-spin"></i> در حال دریافت اطلاعات...</div></div>
+        </div>
     </div>
+
+    <div id="view-view" class="container hidden">
+        <div id="view-content" class="ornate-paper article-wrapper"></div>
+    </div>
+
+    <footer>تمامی حقوق برای آکادمی دانش محفوظ است. © ۱۴۰۵</footer>
+
 <script>
     const supabaseUrl = 'https://quvmycjmphfufodygrfe.supabase.co'; 
     const supabaseKey = 'sb_publishable_yJMUW7s7PGzq1bILJwFbKw_HM0FE57D'; 
     const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-    async function loadJozves() {
-        const { data, error } = await supabaseClient.from('jozveha').select('*').order('created_at', { ascending: false });
-        const container = document.getElementById('jozve-list');
-        if (error) { container.innerHTML = '<p>خطا در اتصال!</p>'; return; }
-        if (data.length === 0) { container.innerHTML = '<p>هنوز جزوه‌ای ثبت نشده است.</p>'; return; }
+    // ==========================================
+    // موتور تبدیل متن (با پشتیبانی از جدول، لیست و کادرها)
+    // ==========================================
+    function parseJozveText(rawText) {
+        if(!rawText) return '<p>متنی ثبت نشده است.</p>';
         
-        container.innerHTML = '';
-        data.forEach(item => {
-            container.innerHTML += `
-                <div class="jozve-card">
-                    <h3>${item.title}</h3>
-                    <a href="view?id=${item.id}" class="btn-view">مشاهده جزوه</a>
-                </div>
-            `;
-        });
+        let lines = rawText.split('\n');
+        let html = '';
+        let inVocabList = false;
+        let inBulletList = false;
+        let inTable = false;
+
+        for (let i = 0; i < lines.length; i++) {
+            let line = lines[i].trim();
+            
+            // مدیریت بستن لیست‌ها و جداول در صورت تغییر
+            if (!line.startsWith('> ') && inVocabList) { html += '</ul>'; inVocabList = false; }
+            if (!line.startsWith('* ') && inBulletList) { html += '</ul>'; inBulletList = false; }
+            
+            // بررسی جدول (خطوطی که با | شروع و تمام میشن)
+            if (line.startsWith('|') && line.endsWith('|')) {
+                if (!inTable) { html += '<div class="table-wrapper"><table class="custom-table">'; inTable = true; }
+                
+                // اگر خط جداکننده بود، نادیده بگیر
+                if (line.match(/^\|[\s\-\|:]+\|$/)) continue;
+
+                // پردازش سلول‌ها
+                let cells = line.split('|').filter(c => c.trim() !== '');
+                let isHeader = (i === 0 || lines[i-1].trim() === ''); // اگر خط اول یا بعد از خط خالی باشد، هدر است
+                
+                // چک کردن اینکه آیا خط بعدی جداکننده است (برای تشخیص هدر)
+                if (i + 1 < lines.length && lines[i+1].trim().match(/^\|[\s\-\|:]+\|$/)) {
+                    isHeader = true;
+                }
+
+                html += '<tr>';
+                cells.forEach(cell => {
+                    let content = cell.trim().replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                    if (isHeader) html += `<th>${content}</th>`;
+                    else html += `<td>${content}</td>`;
+                });
+                html += '</tr>';
+                continue;
+            } else if (inTable) {
+                html += '</table></div>'; inTable = false;
+            }
+
+            if(line === '') continue; 
+
+            // 1. عنوان اصلی
+            if(line.startsWith('# ')) {
+                html += `<div class="ornate-title">${line.substring(2)}</div>`;
+            }
+            // 2. زیرعنوان
+            else if(line.startsWith('## ')) {
+                html += `<div style="text-align:center;"><div class="chapter-label">${line.substring(3)}</div></div>`;
+            }
+            // 3. زیرعنوان کوچک‌تر
+            else if(line.startsWith('### ')) {
+                html += `<h3>${line.substring(4)}</h3>`;
+            }
+            // 4. لیست لغات
+            else if(line.startsWith('> ')) {
+                if(!inVocabList) { html += '<ul class="vocab-list">'; inVocabList = true; }
+                let content = line.substring(2);
+                let parts = content.split('=');
+                if(parts.length >= 2) {
+                    html += `<li><span class="vocab-word">${parts[0].trim()}</span> <span class="vocab-equal">=</span> <span class="vocab-meaning">${parts.slice(1).join('=').trim()}</span></li>`;
+                } else {
+                    html += `<li style="display:block; border:none; padding:5px 0; color:#333;">${content}</li>`;
+                }
+            }
+            // 5. لیست بولت‌دار (ستاره)
+            else if(line.startsWith('* ')) {
+                if(!inBulletList) { html += '<ul class="bullet-list">'; inBulletList = true; }
+                let content = line.substring(2).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                html += `<li>${content}</li>`;
+            }
+            // 6. کادر نکته
+            else if(line.startsWith('::: note')) {
+                html += `<div class="note-box"><strong style="color:#f57f17; display:block; margin-bottom:5px;">💡 نکته:</strong>`;
+            }
+            // 7. کادر سوال
+            else if(line.startsWith('::: q')) {
+                html += `<div class="q-box"><strong style="color:#1565c0; display:block; margin-bottom:5px;">❓ سوال:</strong>`;
+            }
+            // 8. کادر پاسخ
+            else if(line.startsWith('::: a')) {
+                html += `<div class="a-box"><strong style="display:block; margin-bottom:5px;">✅ پاسخ:</strong>`;
+            }
+            // 9. کادر هشدار (جدید)
+            else if(line.startsWith('::: warn')) {
+                html += `<div class="warn-box"><strong style="display:block; margin-bottom:5px;">⚠️ هشدار:</strong>`;
+            }
+            // 10. بستن کادرها
+            else if(line === ':::') {
+                html += `</div>`; 
+            }
+            // 11. جداکننده (خط تیره سه بار)
+            else if(line === '---') {
+                html += `<hr class="divider">`;
+            }
+            // 12. متن عادی
+            else {
+                let content = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+                html += `<p style="margin-bottom:15px; font-size:16px;">${content}</p>`;
+            }
+        }
+        
+        if(inVocabList) html += '</ul>';
+        if(inBulletList) html += '</ul>';
+        if(inTable) html += '</table></div>';
+        
+        return html;
     }
-    document.addEventListener('DOMContentLoaded', loadJozves);
+
+    // ==========================================
+    // توابع اصلی
+    // ==========================================
+    async function fetchJozveList() {
+        const container = document.getElementById('jozve-list');
+        try {
+            const { data, error } = await supabaseClient.from('jozve_list').select('*').order('created_at', { ascending: false });
+            if (error) throw error;
+            container.innerHTML = '';
+            if (data.length === 0) { container.innerHTML = '<div class="empty-state">هنوز جزوه‌ای ثبت نشده است.</div>'; return; }
+            
+            data.forEach(item => {
+                const box = document.createElement('div');
+                box.className = 'card-3d';
+                box.innerHTML = `
+                    <div>
+                        <h3>${item.title}</h3>
+                        <span class="tag">${item.type || 'جزوه'}</span>
+                    </div>
+                    <button onclick="openView(${item.id})" class="btn-cream-double">مشاهده <i class="fa-solid fa-arrow-left"></i></button>
+                `;
+                container.appendChild(box);
+            });
+        } catch (err) { container.innerHTML = `<div class="empty-state" style="color: red;">خطا در اتصال! VPN را روشن کنید.</div>`; }
+    }
+
+    function scrollToJozvat() { document.getElementById('jozvat').scrollIntoView({ behavior: 'smooth' }); }
+
+    function showHome() {
+        document.getElementById('home-view').classList.remove('hidden');
+        document.getElementById('home-view').classList.add('fade-in');
+        document.getElementById('view-view').classList.add('hidden');
+        document.getElementById('main-nav').classList.remove('hidden');
+        document.getElementById('back-btn').classList.add('hidden');
+    }
+
+    async function openView(jozveId) {
+        document.getElementById('home-view').classList.add('hidden');
+        document.getElementById('view-view').classList.remove('hidden');
+        document.getElementById('view-view').classList.add('fade-in');
+        document.getElementById('main-nav').classList.add('hidden');
+        document.getElementById('back-btn').classList.remove('hidden');
+
+        try {
+            const { data, error } = await supabaseClient.from('jozve_list').select('*').eq('id', jozveId).single();
+            if (error) throw error;
+            
+            document.getElementById('view-content').innerHTML = parseJozveText(data.text || '');
+        } catch (err) {
+            document.getElementById('view-content').innerHTML = `<p style="color:red; text-align:center;">خطا در دریافت اطلاعات.</p>`;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', fetchJozveList);
 </script>
 </body>
-    </html>
+</html>
